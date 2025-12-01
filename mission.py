@@ -1,11 +1,11 @@
 import simplekml
 from zipfile import ZipFile
 
-# ✅ Coordonnées centrales (exemple : lycée)
+#  Coordonnées centrales (exemple : lycée)
 lat0 = 44.8060109
 lon0 = -0.6050179
 
-# ✅ Créer une trajectoire autour du point central (5 waypoints)
+#  Créer une trajectoire autour du point central (5 waypoints)
 waypoints = [
     (lat0, lon0, 40),                # WP1
     (lat0 + 0.0003, lon0, 40),       # WP2
@@ -14,7 +14,7 @@ waypoints = [
     (lat0, lon0, 40)                 # WP5 (retour au point de départ)
 ]
 
-# ✅ Créer le KML
+# Créer le KML
 kml = simplekml.Kml()
 folder = kml.newfolder(name="Mission Auto")
 
