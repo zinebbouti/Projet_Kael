@@ -1,5 +1,6 @@
 import sys
 import math
+import time
 from zipfile import ZipFile
 
 from PyQt5.QtWidgets import QApplication, QInputDialog, QMessageBox
@@ -7,7 +8,6 @@ from PyQt5.QtWebEngineWidgets import QWebEngineView
 from PyQt5.QtCore import QObject, pyqtSlot
 from PyQt5.QtWebChannel import QWebChannel
 
-import simplekml
 from geopy.geocoders import Nominatim
 
 # ---------------------------
@@ -22,7 +22,7 @@ def get_location_coordinates(place_name):
         return None, None
 
 # ---------------------------
-# HTML de la carte avec placeholders pour latitude et longitude
+# HTML de la carte
 # ---------------------------
 HTML_TEMPLATE = """
 <!DOCTYPE html>
@@ -91,15 +91,12 @@ var markers = [];
 var pointCount = 0;
 var bridge = null;
 
-// Initialiser le bridge
 new QWebChannel(qt.webChannelTransport, function (channel) {{
     bridge = channel.objects.bridge;
 }});
 
-// Gestion des clics sur la carte
 map.on('click', function (e) {{
     if (pointCount < 4 && bridge) {{
-        // Ajouter un marqueur
         var marker = L.circleMarker([e.latlng.lat, e.latlng.lng], {{
             radius: 6,
             color: '#2196F3',
@@ -109,11 +106,9 @@ map.on('click', function (e) {{
         marker.bindPopup('Point ' + (pointCount + 1)).openPopup();
         markers.push(marker);
         
-        // Envoyer le point au bridge
         bridge.sendPoint(e.latlng.lat, e.latlng.lng);
         pointCount++;
         
-        // Mettre à jour l'info
         if (pointCount < 4) {{
             document.getElementById('info').textContent = 
                 'Point ' + pointCount + '/4 enregistré. Cliquez pour ajouter le point suivant.';
@@ -125,24 +120,21 @@ map.on('click', function (e) {{
     }}
 }});
 
-// Bouton de validation
 document.getElementById('validate').addEventListener('click', function() {{
     if (bridge && pointCount === 4) {{
         bridge.validateRectangle();
     }}
 }});
 
-// Bouton de réinitialisation
 document.getElementById('reset').addEventListener('click', function() {{
     if (bridge) {{
         bridge.resetPoints();
-        // Nettoyer la carte
         markers.forEach(function(m) {{ map.removeLayer(m); }});
         markers = [];
         if (polygon) {{ map.removeLayer(polygon); polygon = null; }}
         map.eachLayer(function(layer) {{
             if (layer instanceof L.CircleMarker || layer instanceof L.Polyline) {{
-                if (layer !== markers[0] && !markers.includes(layer)) {{
+                if (!markers.includes(layer)) {{
                     map.removeLayer(layer);
                 }}
             }}
@@ -158,14 +150,220 @@ document.getElementById('reset').addEventListener('click', function() {{
 """
 
 # ---------------------------
+# Fonction pour générer un KMZ compatible WaypointMap
+# ---------------------------
+def generate_waypointmap_kmz(waypoints, drone_speed, gimbal_pitch, output_name="mission_waypoints.kmz"):
+    """
+    Génère un fichier KMZ compatible avec WaypointMap.com et DJI Fly.
+    Structure: wpmz/template.kml + wpmz/waylines.wpml
+    """
+    
+    timestamp = int(time.time() * 1000)
+    
+    # ========== template.kml (configuration globale) ==========
+    template_kml = f"""<?xml version="1.0" encoding="UTF-8"?>
+<kml xmlns="http://www.opengis.net/kml/2.2" xmlns:wpml="http://www.dji.com/wpmz/1.0.2">
+<Document>
+<wpml:author>fly</wpml:author>
+<wpml:createTime>{timestamp}</wpml:createTime>
+<wpml:updateTime>{timestamp}</wpml:updateTime>
+<wpml:missionConfig>
+<wpml:flyToWaylineMode>safely</wpml:flyToWaylineMode>
+<wpml:finishAction>noAction</wpml:finishAction>
+<wpml:exitOnRCLost>executeLostAction</wpml:exitOnRCLost>
+<wpml:executeRCLostAction>hover</wpml:executeRCLostAction>
+<wpml:globalTransitionalSpeed>{drone_speed}</wpml:globalTransitionalSpeed>
+<wpml:droneInfo>
+<wpml:droneEnumValue>68</wpml:droneEnumValue>
+<wpml:droneSubEnumValue>0</wpml:droneSubEnumValue>
+</wpml:droneInfo>
+</wpml:missionConfig>
+</Document>
+</kml>
+"""
+    
+    # ========== waylines.wpml (waypoints et actions) ==========
+    waylines_wpml = f"""<?xml version="1.0" encoding="UTF-8"?>
+<kml xmlns="http://www.opengis.net/kml/2.2" xmlns:wpml="http://www.dji.com/wpmz/1.0.2">
+\t<Document>
+\t\t<wpml:missionConfig>
+\t\t\t<wpml:flyToWaylineMode>safely</wpml:flyToWaylineMode>
+\t\t\t<wpml:finishAction>noAction</wpml:finishAction>
+\t\t\t<wpml:exitOnRCLost>executeLostAction</wpml:exitOnRCLost>
+\t\t\t<wpml:executeRCLostAction>hover</wpml:executeRCLostAction>
+\t\t\t<wpml:globalTransitionalSpeed>{drone_speed}</wpml:globalTransitionalSpeed>
+\t\t\t<wpml:droneInfo>
+\t\t\t\t<wpml:droneEnumValue>68</wpml:droneEnumValue>
+\t\t\t\t<wpml:droneSubEnumValue>0</wpml:droneSubEnumValue>
+\t\t\t</wpml:droneInfo>
+\t\t</wpml:missionConfig>
+\t\t<Folder>
+\t\t\t<wpml:templateId>0</wpml:templateId>
+\t\t\t<wpml:executeHeightMode>relativeToStartPoint</wpml:executeHeightMode>
+\t\t\t<wpml:waylineId>0</wpml:waylineId>
+\t\t\t<wpml:distance>0</wpml:distance>
+\t\t\t<wpml:duration>0</wpml:duration>
+\t\t\t<wpml:autoFlightSpeed>{drone_speed}</wpml:autoFlightSpeed>
+"""
+    
+    # Calculer la direction pour chaque segment
+    def get_heading(i, waypoints):
+        """Calcule l'angle de cap basé sur la direction du vol"""
+        if i == 0:
+            # Premier point : regarder vers le prochain
+            lat1, lon1, _ = waypoints[0]
+            lat2, lon2, _ = waypoints[1]
+        elif i == len(waypoints) - 1:
+            # Dernier point : même direction que l'avant-dernier segment
+            lat1, lon1, _ = waypoints[i-1]
+            lat2, lon2, _ = waypoints[i]
+        else:
+            # Points intermédiaires : direction vers le prochain point
+            lat1, lon1, _ = waypoints[i]
+            lat2, lon2, _ = waypoints[i+1]
+        
+        # Calcul de l'angle (0° = Nord, 90° = Est, -90° = Ouest, 180° = Sud)
+        dlon = lon2 - lon1
+        dlat = lat2 - lat1
+        
+        angle = math.degrees(math.atan2(dlon, dlat))
+        
+        # Déterminer si on va vers l'est (-90°) ou l'ouest (90°)
+        if abs(dlon) > abs(dlat):  # Mouvement principalement horizontal
+            return -90 if dlon > 0 else 90
+        else:  # Mouvement principalement vertical
+            return -90 if dlat < 0 else -90
+    
+    # Générer chaque waypoint
+    action_id = 1
+    for i, (lat, lon, alt) in enumerate(waypoints):
+        heading = get_heading(i, waypoints)
+        
+        # Mode de rotation au waypoint
+        if i == 0:
+            turn_mode = "toPointAndStopWithContinuityCurvature"
+            heading_enable = 1
+        else:
+            turn_mode = "toPointAndPassWithContinuityCurvature"
+            heading_enable = 0
+        
+        waylines_wpml += f"""<Placemark>
+<Point>
+<coordinates>
+{lon},{lat}
+</coordinates>
+</Point>
+<wpml:index>{i}</wpml:index>
+<wpml:executeHeight>{int(alt)}</wpml:executeHeight>
+<wpml:waypointSpeed>{drone_speed}</wpml:waypointSpeed>
+<wpml:waypointHeadingParam>
+<wpml:waypointHeadingMode>smoothTransition</wpml:waypointHeadingMode>
+<wpml:waypointHeadingAngle>{heading}</wpml:waypointHeadingAngle>
+<wpml:waypointPoiPoint>0.000000,0.000000,0.000000</wpml:waypointPoiPoint>
+<wpml:waypointHeadingAngleEnable>{heading_enable}</wpml:waypointHeadingAngleEnable>
+<wpml:waypointHeadingPathMode>followBadArc</wpml:waypointHeadingPathMode>
+</wpml:waypointHeadingParam>
+<wpml:waypointTurnParam>
+<wpml:waypointTurnMode>{turn_mode}</wpml:waypointTurnMode>
+<wpml:waypointTurnDampingDist>0</wpml:waypointTurnDampingDist>
+</wpml:waypointTurnParam>
+<wpml:useStraightLine>0</wpml:useStraightLine>
+"""
+        
+        # Action au premier point : rotation de la nacelle + gimbalEvenlyRotate
+        if i == 0:
+            waylines_wpml += f"""<wpml:actionGroup>
+<wpml:actionGroupId>1</wpml:actionGroupId>
+<wpml:actionGroupStartIndex>0</wpml:actionGroupStartIndex>
+<wpml:actionGroupEndIndex>0</wpml:actionGroupEndIndex>
+<wpml:actionGroupMode>parallel</wpml:actionGroupMode>
+<wpml:actionTrigger>
+<wpml:actionTriggerType>reachPoint</wpml:actionTriggerType>
+</wpml:actionTrigger>
+<wpml:action>
+<wpml:actionId>{action_id}</wpml:actionId>
+<wpml:actionActuatorFunc>gimbalRotate</wpml:actionActuatorFunc>
+<wpml:actionActuatorFuncParam>
+<wpml:gimbalHeadingYawBase>aircraft</wpml:gimbalHeadingYawBase>
+<wpml:gimbalRotateMode>absoluteAngle</wpml:gimbalRotateMode>
+<wpml:gimbalPitchRotateEnable>1</wpml:gimbalPitchRotateEnable>
+<wpml:gimbalPitchRotateAngle>{gimbal_pitch}</wpml:gimbalPitchRotateAngle>
+<wpml:gimbalRollRotateEnable>0</wpml:gimbalRollRotateEnable>
+<wpml:gimbalRollRotateAngle>0</wpml:gimbalRollRotateAngle>
+<wpml:gimbalYawRotateEnable>0</wpml:gimbalYawRotateEnable>
+<wpml:gimbalYawRotateAngle>0</wpml:gimbalYawRotateAngle>
+<wpml:gimbalRotateTimeEnable>0</wpml:gimbalRotateTimeEnable>
+<wpml:gimbalRotateTime>0</wpml:gimbalRotateTime>
+<wpml:payloadPositionIndex>0</wpml:payloadPositionIndex>
+</wpml:actionActuatorFuncParam>
+</wpml:action>
+</wpml:actionGroup>
+"""
+            action_id += 1
+            
+            # Deuxième action group pour gimbalEvenlyRotate
+            waylines_wpml += f"""<wpml:actionGroup>
+<wpml:actionGroupId>2</wpml:actionGroupId>
+<wpml:actionGroupStartIndex>0</wpml:actionGroupStartIndex>
+<wpml:actionGroupEndIndex>{len(waypoints)-1}</wpml:actionGroupEndIndex>
+<wpml:actionGroupMode>parallel</wpml:actionGroupMode>
+<wpml:actionTrigger>
+<wpml:actionTriggerType>reachPoint</wpml:actionTriggerType>
+</wpml:actionTrigger>
+<wpml:action>
+<wpml:actionId>{action_id}</wpml:actionId>
+<wpml:actionActuatorFunc>gimbalEvenlyRotate</wpml:actionActuatorFunc>
+<wpml:actionActuatorFuncParam>
+<wpml:gimbalPitchRotateAngle>{gimbal_pitch}</wpml:gimbalPitchRotateAngle>
+<wpml:payloadPositionIndex>0</wpml:payloadPositionIndex>
+</wpml:actionActuatorFuncParam>
+</wpml:action>
+</wpml:actionGroup>
+"""
+        else:
+            # Pour les autres points : action gimbalEvenlyRotate
+            waylines_wpml += f"""<wpml:actionGroup>
+<wpml:actionGroupId>2</wpml:actionGroupId>
+<wpml:actionGroupStartIndex>{i}</wpml:actionGroupStartIndex>
+<wpml:actionGroupEndIndex>{i}</wpml:actionGroupEndIndex>
+<wpml:actionGroupMode>parallel</wpml:actionGroupMode>
+<wpml:actionTrigger>
+<wpml:actionTriggerType>reachPoint</wpml:actionTriggerType>
+</wpml:actionTrigger>
+<wpml:action>
+<wpml:actionId>{action_id}</wpml:actionId>
+<wpml:actionActuatorFunc>gimbalEvenlyRotate</wpml:actionActuatorFunc>
+<wpml:actionActuatorFuncParam>
+<wpml:gimbalPitchRotateAngle>{gimbal_pitch}</wpml:gimbalPitchRotateAngle>
+<wpml:payloadPositionIndex>0</wpml:payloadPositionIndex>
+</wpml:actionActuatorFuncParam>
+</wpml:action>
+</wpml:actionGroup>
+"""
+        
+        action_id += 1
+        waylines_wpml += "</Placemark>"
+    
+    waylines_wpml += """
+\t\t</Folder>
+\t</Document>
+</kml>
+"""
+    
+    # Créer le fichier KMZ
+    with ZipFile(output_name, 'w') as kmz:
+        kmz.writestr("wpmz/template.kml", template_kml)
+        kmz.writestr("wpmz/waylines.wpml", waylines_wpml)
+    
+    return output_name
+
+# ---------------------------
 # Fonction pour valider le rectangle
 # ---------------------------
 def validate_rectangle(points):
-    """Vérifie si les 4 points forment approximativement un rectangle"""
     if len(points) != 4:
         return False, "Il faut exactement 4 points."
     
-    # Calculer les distances entre points consécutifs
     distances = []
     for i in range(4):
         p1 = points[i]
@@ -173,40 +371,19 @@ def validate_rectangle(points):
         dist = math.sqrt((p2[0] - p1[0])**2 + (p2[1] - p1[1])**2)
         distances.append(dist)
     
-    # Les côtés opposés doivent être approximativement égaux (tolérance 20%)
     ratio1 = abs(distances[0] - distances[2]) / max(distances[0], distances[2])
     ratio2 = abs(distances[1] - distances[3]) / max(distances[1], distances[3])
     
     if ratio1 > 0.2 or ratio2 > 0.2:
-        return False, "Les points ne forment pas un rectangle régulier. Les côtés opposés doivent être approximativement égaux."
+        return False, "Les points ne forment pas un rectangle régulier."
     
     return True, "Rectangle valide."
 
 # ---------------------------
-# Fonction pour générer des waypoints avec calcul FOV amélioré
+# Fonction pour générer des waypoints
 # ---------------------------
 def generate_waypoints(rect_points, altitude, frontal_cov, lateral_cov,
                        sensor_width, sensor_height, focal_length):
-    """
-    Génère les waypoints pour un rectangle orienté.
-    
-    rect_points : liste de 4 points [(lat, lon), ...] dans l'ordre autour du rectangle
-    altitude : hauteur de vol
-    frontal_cov : recouvrement frontal (0-1)
-    lateral_cov : recouvrement latéral (0-1)
-    sensor_width/height : dimensions du capteur en mm
-    focal_length : focale de l'objectif en mm
-    """
-    """
-    Génération de waypoints avec repère local par ligne.
-    rect_points : liste des 4 coins du rectangle dans l'ordre P0,P1,P2,P3
-    P0--P1
-    |   |
-    P3--P2
-    """
-
-    import math
-
     P0, P1, P2, P3 = rect_points
 
     def distance_m(pA, pB):
@@ -215,12 +392,10 @@ def generate_waypoints(rect_points, altitude, frontal_cov, lateral_cov,
         dy = (pB[0]-pA[0]) * 111000
         return math.sqrt(dx*dx + dy*dy)
 
-    # FOV caméra
     fov_width  = 2 * altitude * (sensor_width / (2 * focal_length))
     fov_height = 2 * altitude * (sensor_height / (2 * focal_length))
     dy = fov_height * (1 - lateral_cov)
 
-    # nombre de lignes selon dy
     Ly_total = distance_m(P0, P3)
     Ny = max(1, int(math.ceil(Ly_total / dy)))
 
@@ -228,40 +403,35 @@ def generate_waypoints(rect_points, altitude, frontal_cov, lateral_cov,
 
     for iy in range(Ny + 1):
         frac_y = iy / Ny
-        # calcul des points gauche et droite de cette ligne
         left_lat  = P0[0] + frac_y * (P3[0]-P0[0])
         left_lon  = P0[1] + frac_y * (P3[1]-P0[1])
         right_lat = P1[0] + frac_y * (P2[0]-P1[0])
         right_lon = P1[1] + frac_y * (P2[1]-P1[1])
 
-        # longueur de la ligne
         Lx_line = distance_m((left_lat,left_lon), (right_lat,right_lon))
         dx = fov_width * (1 - frontal_cov)
         Nx = max(1, int(math.ceil(Lx_line / dx)))
 
+        line_waypoints = []
         for ix in range(Nx + 1):
             frac_x = ix / Nx
             lat = left_lat + frac_x * (right_lat - left_lat)
             lon = left_lon + frac_x * (right_lon - left_lon)
-            waypoints.append((lat, lon, altitude))
+            line_waypoints.append((lat, lon, altitude))
 
-        # serpentin
         if iy % 2 == 1:
-            waypoints[-(Nx + 1):] = reversed(waypoints[-(Nx + 1):])
-
-    # retour au point de départ
-    waypoints.append((P0[0], P0[1], altitude))
+            line_waypoints.reverse()
+        
+        waypoints.extend(line_waypoints)
 
     return waypoints, Nx + 1, Ny + 1, fov_width, fov_height
-
-
 
 # ---------------------------
 # Classe Bridge PyQt5
 # ---------------------------
 class Bridge(QObject):
     def __init__(self, view, altitude, frontal_cov, lateral_cov, 
-                 sensor_width, sensor_height, focal_length):
+                 sensor_width, sensor_height, focal_length, drone_speed, gimbal_pitch):
         super().__init__()
         self.view = view
         self.points = []
@@ -271,6 +441,8 @@ class Bridge(QObject):
         self.sensor_width = sensor_width
         self.sensor_height = sensor_height
         self.focal_length = focal_length
+        self.drone_speed = drone_speed
+        self.gimbal_pitch = gimbal_pitch
 
     @pyqtSlot(float, float)
     def sendPoint(self, lat, lng):
@@ -278,7 +450,6 @@ class Bridge(QObject):
         self.points.append([lat, lng])
 
         if len(self.points) == 4:
-            # Créer le polygone sur la carte
             js = f"""
                 var pts = {self.points + [self.points[0]]};
                 if (polygon) map.removeLayer(polygon);
@@ -299,7 +470,6 @@ class Bridge(QObject):
             QMessageBox.warning(self.view, "Erreur", "Veuillez sélectionner exactement 4 points.")
             return
         
-        # Valider le rectangle
         is_valid, message = validate_rectangle(self.points)
         if not is_valid:
             QMessageBox.warning(self.view, "Rectangle invalide", message)
@@ -307,16 +477,13 @@ class Bridge(QObject):
         
         print("Validation du rectangle...")
         
-        # Générer les waypoints
         waypoints, nx, ny, fov_w, fov_h = generate_waypoints(
             self.points, self.altitude, self.frontal_cov, self.lateral_cov,
             self.sensor_width, self.sensor_height, self.focal_length
         )
         
-        # Afficher les waypoints sur la carte
         waypoints_coords = [[lat, lon] for lat, lon, _ in waypoints]
         js_show_waypoints = f"""
-            // Supprimer les anciens waypoints
             map.eachLayer(function(layer) {{
                 if (layer instanceof L.CircleMarker && layer.options.className === 'waypoint') {{
                     map.removeLayer(layer);
@@ -326,7 +493,6 @@ class Bridge(QObject):
                 }}
             }});
             
-            // Afficher les waypoints
             var coords = {waypoints_coords};
             coords.forEach(function(wp, i) {{
                 L.circleMarker(wp, {{
@@ -338,7 +504,6 @@ class Bridge(QObject):
                 }}).addTo(map).bindPopup('WP' + (i+1));
             }});
             
-            // Afficher la trajectoire
             L.polyline(coords, {{
                 color: 'red', 
                 weight: 2, 
@@ -347,15 +512,13 @@ class Bridge(QObject):
             }}).addTo(map);
         """
         self.view.page().runJavaScript(js_show_waypoints)
-
-
         
-        # Message d'information
-        msg = f"""Mission calculée avec succès 
-
+        msg = f"""Mission calculée avec succès !
 
 Paramètres:
 - Altitude: {self.altitude} m
+- Vitesse drone: {self.drone_speed} m/s
+- Angle nacelle: {self.gimbal_pitch}°
 - Recouvrement frontal: {self.frontal_cov*100:.0f}%
 - Recouvrement latéral: {self.lateral_cov*100:.0f}%
 - FOV calculé: {fov_w:.1f}m × {fov_h:.1f}m
@@ -365,7 +528,8 @@ Résultats:
 - Points par passe: {nx}
 - Total waypoints: {len(waypoints)}
 
-Le fichier mission_waypoints.kmz a été généré."""
+Le fichier mission_waypoints.kmz a été généré.
+Compatible avec WaypointMap et DJI Fly."""
         
         print(f"\n{'='*50}")
         print(msg)
@@ -373,37 +537,19 @@ Le fichier mission_waypoints.kmz a été généré."""
         
         QMessageBox.information(self.view, "Mission générée", msg)
         
-        # Créer le KML/KMZ
-        kml = simplekml.Kml()
-        folder = kml.newfolder(name="Mission Automatique Drone")
-        
-        # Ajouter les waypoints
-        for i, (lat, lon, alt) in enumerate(waypoints):
-            pnt = folder.newpoint(name=f"WP{i+1}", coords=[(lon, lat, alt)])
-            pnt.style.iconstyle.color = simplekml.Color.red
-            pnt.style.iconstyle.scale = 0.5
-        
-        # Ajouter la trajectoire
-        linestring = folder.newlinestring(
-            name="Trajectoire de vol",
-            coords=[(lon, lat, alt) for (lat, lon, alt) in waypoints]
+        kmz_file = generate_waypointmap_kmz(
+            waypoints, 
+            self.drone_speed,
+            self.gimbal_pitch,
+            "mission_waypoints.kmz"
         )
-        linestring.altitudemode = simplekml.AltitudeMode.absolute
-        linestring.style.linestyle.color = simplekml.Color.red
-        linestring.style.linestyle.width = 3
         
-        # Ajouter le polygone de la zone
-        poly = folder.newpolygon(name="Zone de mission")
-        poly.outerboundaryis = [(self.points[i][1], self.points[i][0], self.altitude) 
-                                for i in range(4)] + [(self.points[0][1], self.points[0][0], self.altitude)]
-        poly.style.polystyle.color = simplekml.Color.changealphaint(100, simplekml.Color.blue)
-        
-        # Sauvegarder
-        kml.save("doc.kml")
-        with ZipFile("mission_waypoints.kmz", "w") as kmz:
-            kmz.write("doc.kml")
-        
-        print("✔ Fichier KMZ généré: mission_waypoints.kmz")
+        print(f"✔ Fichier KMZ généré: {kmz_file}")
+        print("\n📱 Installation dans DJI Fly:")
+        print("1. Créez une mission dans DJI Fly (2-3 waypoints)")
+        print("2. Connectez la télécommande en USB")
+        print("3. Naviguez: Android/data/dji.go.v5/files/waypoint/")
+        print("4. Remplacez le .kmz par mission_waypoints.kmz")
 
     @pyqtSlot()
     def resetPoints(self):
@@ -415,10 +561,8 @@ Le fichier mission_waypoints.kmz a été généré."""
 # ---------------------------
 app = QApplication(sys.argv)
 
-# Demander le lieu
 place_name, ok_place = QInputDialog.getText(
-    None, 
-    "Lieu de la mission", 
+    None, "Lieu de la mission", 
     "Entrez le nom du lieu (ex: ENSEIRB-MATMECA, Bordeaux) :"
 )
 if not ok_place or not place_name.strip():
@@ -427,70 +571,40 @@ if not ok_place or not place_name.strip():
 
 lat, lon = get_location_coordinates(place_name)
 if lat is None:
-    print("Lieu introuvable, utilisation des coordonnées par défaut (Paris)")
+    print("Lieu introuvable, coordonnées par défaut (Paris)")
     lat, lon = 48.8566, 2.3522
 
 print(f"Lieu localisé: {place_name} ({lat:.6f}, {lon:.6f})")
 
-# Demander les paramètres de vol
-altitude, ok1 = QInputDialog.getDouble(
-    None, "Hauteur de vol", 
-    "Entrez la hauteur de vol (m):", 
-    50, 10, 500, 1
-)
+altitude, ok1 = QInputDialog.getDouble(None, "Hauteur de vol", "Hauteur (m):", 50, 10, 500, 1)
+drone_speed, ok2 = QInputDialog.getDouble(None, "Vitesse", "Vitesse (m/s):", 2.5, 1, 15, 1)
+gimbal_pitch, ok3 = QInputDialog.getDouble(None, "Angle nacelle", "Angle (-90=bas, 0=horizontal):", -45, -90, 0, 1)
+frontal_cov, ok4 = QInputDialog.getDouble(None, "Recouvrement frontal", "Frontal (0.8 = 80%):", 0.8, 0.5, 0.95, 2)
+lateral_cov, ok5 = QInputDialog.getDouble(None, "Recouvrement latéral", "Latéral (0.8 = 80%):", 0.8, 0.5, 0.95, 2)
+sensor_width, ok6 = QInputDialog.getDouble(None, "Capteur", "Largeur (mm):", 6.17, 1.0, 50.0, 2)
+sensor_height, ok7 = QInputDialog.getDouble(None, "Capteur", "Hauteur (mm):", 4.55, 1.0, 50.0, 2)
+focal_length, ok8 = QInputDialog.getDouble(None, "Focale", "Focale (mm):", 4.5, 1.0, 100.0, 1)
 
-frontal_cov, ok2 = QInputDialog.getDouble(
-    None, "Recouvrement frontal", 
-    "Recouvrement frontal (0.5 = 50%, 0.8 = 80%):", 
-    0.8, 0.5, 0.95, 2
-)
-
-lateral_cov, ok3 = QInputDialog.getDouble(
-    None, "Recouvrement latéral", 
-    "Recouvrement latéral (0.5 = 50%, 0.8 = 80%):", 
-    0.8, 0.5, 0.95, 2
-)
-
-# Paramètres optionnels de la caméra
-sensor_width, ok4 = QInputDialog.getDouble(
-    None, "Capteur - Largeur", 
-    "Largeur du capteur (mm):", 
-    6.17, 1.0, 50.0, 2
-)
-
-sensor_height, ok5 = QInputDialog.getDouble(
-    None, "Capteur - Hauteur", 
-    "Hauteur du capteur (mm):", 
-    4.55, 1.0, 50.0, 2
-)
-
-focal_length, ok6 = QInputDialog.getDouble(
-    None, "Objectif - Focale", 
-    "Focale de l'objectif (mm):", 
-    4.5, 1.0, 100.0, 1
-)
-
-if not all([ok1, ok2, ok3, ok4, ok5, ok6]):
+if not all([ok1, ok2, ok3, ok4, ok5, ok6, ok7, ok8]):
     print("Annulé par l'utilisateur")
     sys.exit()
 
-# Préparer la carte
 HTML = HTML_TEMPLATE.format(lat=lat, lon=lon)
 
 view = QWebEngineView()
-view.setWindowTitle("Générateur de mission drone - Sélection du rectangle")
+view.setWindowTitle("Générateur de mission drone - WaypointMap compatible")
 view.resize(1200, 800)
 
 channel = QWebChannel()
 bridge = Bridge(view, altitude, frontal_cov, lateral_cov, 
-                sensor_width, sensor_height, focal_length)
+                sensor_width, sensor_height, focal_length, drone_speed, gimbal_pitch)
 channel.registerObject("bridge", bridge)
 view.page().setWebChannel(channel)
 view.setHtml(HTML)
 view.show()
 
 print("\n" + "="*50)
-print("Interface lancée - Suivez les instructions à l'écran")
+print("Interface lancée - Suivez les instructions")
 print("="*50 + "\n")
 
 sys.exit(app.exec_())
