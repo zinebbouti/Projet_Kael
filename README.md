@@ -45,6 +45,39 @@ Ce projet permet de créer et gérer des missions pour drones, avec génération
   4. Compresse le fichier KML en KMZ prêt à l’usage dans un logiciel de planification de vol.
 
 ---
+### 5️⃣ `analyse_lidr.R`
+
+**But**  
+Analyse forestière à partir d’un nuage de points LiDAR ou photogrammétrique.
+
+**Fonctionnalités**
+- Lecture de fichiers `.laz` (LiDAR HD IGN ou WebODM).
+- Découpage spatial de la zone d’étude.
+- Classification du sol.
+- Calcul du Modèle Numérique de Terrain (DTM).
+- Normalisation des hauteurs.
+- Génération du **Canopy Height Model (CHM)**.
+- Détection automatique des arbres.
+- Calcul de la hauteur de chaque arbre.
+- Export des résultats en **GeoJSON**.
+
+**Bibliothèques utilisées**
+- `lidR`
+- `sf`
+- `terra`
+
+⚠️ Les fichiers `.laz` ne sont pas inclus dans le dépôt GitHub en raison de leur taille.
+## 🗺️ Données LiDAR (.LAZ)
+
+Les données LiDAR utilisées pour les tests et l’analyse proviennent de **sources publiques officielles** :
+
+- **IGN – LiDAR HD (France)**  
+  - https://geoservices.ign.fr/lidarhd  
+  - https://cartes.gouv.fr/telechargement/IGNF_NUAGES-DE-POINTS-LIDAR-HD  
+
+Les fichiers doivent être **téléchargés localement** puis référencés dans le script `analyse_lidr.R`.
+
+
 
 ## ⚡ Installation et exécution
 
