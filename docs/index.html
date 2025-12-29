@@ -4,16 +4,15 @@
 <meta charset="utf-8">
 <title>Projet Kael – Cartographie de la canopée par drone</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
-
 <style>
 :root{
-  --bg:#0e1525;
-  --bg2:#0b1020;
-  --card:#151d33;
-  --accent:#6fb1ff;
-  --accent2:#9fd0ff;
-  --text:#eaeaea;
-  --muted:#b5c0d8;
+  --bg:#111418;
+  --bg2:#0d0f12;
+  --card:#1a1f24;
+  --accent:#5fa36a;
+  --accent2:#9ad1a3;
+  --text:#e8e8e8;
+  --muted:#b8c2b9;
 }
 
 *{box-sizing:border-box}
@@ -21,15 +20,17 @@
 body{
   margin:0;
   font-family: "Segoe UI", Arial, Helvetica, sans-serif;
-  background:linear-gradient(180deg,#0e1525,#0b1020);
+  background:var(--bg);
   color:var(--text);
   line-height:1.7;
 }
 
+/* ===== HEADER ===== */
 header{
   padding:70px 20px 80px;
   text-align:center;
-  background:linear-gradient(135deg,#1e3c72,#2a5298);
+  background:#14181d;
+  border-bottom:1px solid rgba(255,255,255,0.06);
 }
 
 .logos{
@@ -40,37 +41,41 @@ header{
   margin:0 auto 50px auto;
   gap:80px;
 }
+
 .logos img{
   max-height:80px;
   max-width:260px;
   background:white;
   padding:12px 18px;
-  border-radius:14px;
+  border-radius:12px;
   object-fit:contain;
-  box-shadow:0 10px 25px rgba(0,0,0,0.25);
 }
 
 header h1{
-  font-size:48px;
+  font-size:46px;
   margin-bottom:15px;
-  letter-spacing:0.5px;
+  color:white;
 }
+
 header p{
   max-width:900px;
   margin:auto;
-  font-size:19px;
-  opacity:0.95;
+  font-size:18px;
+  color:var(--muted);
 }
 
+/* ===== BADGES ===== */
 .badges span{
   display:inline-block;
-  background:rgba(255,255,255,0.12);
+  background:rgba(95,163,106,0.15);
+  color:var(--accent2);
   padding:7px 14px;
   border-radius:20px;
   font-size:13px;
   margin:8px 6px 0 0;
 }
 
+/* ===== SECTIONS ===== */
 section{
   max-width:1150px;
   margin:auto;
@@ -78,71 +83,87 @@ section{
 }
 
 section.alt{
-  background:rgba(255,255,255,0.02);
+  background:#14181d;
 }
 
+/* ===== TITRES ===== */
 h2{
   color:var(--accent);
   margin-bottom:18px;
   font-size:28px;
 }
+
 h3{
   color:var(--accent2);
   margin-top:0;
 }
 
+/* ===== GRIDS ===== */
 .grid{
   display:grid;
   grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
   gap:28px;
 }
 
+/* ===== CARDS ===== */
 .card{
   background:var(--card);
   padding:26px;
-  border-radius:16px;
-  border:1px solid rgba(255,255,255,0.08);
+  border-radius:14px;
+  border:1px solid rgba(255,255,255,0.06);
   display:flex;
   flex-direction:column;
 }
 
 .card img{
   margin-top:auto;
-  border-radius:12px;
+  border-radius:10px;
   width:100%;
 }
 
+/* ===== TIMELINE ===== */
 .timeline{
   display:grid;
-  grid-template-columns:1fr;
   gap:20px;
 }
+
 .timeline div{
   background:var(--card);
   padding:20px;
   border-left:4px solid var(--accent);
-  border-radius:10px;
+  border-radius:8px;
 }
 
+/* ===== STATS ===== */
 .stats{
   display:grid;
   grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
   gap:20px;
 }
+
 .stat{
   background:var(--card);
   padding:20px;
-  border-radius:14px;
+  border-radius:12px;
   text-align:center;
 }
+
 .stat strong{
   font-size:32px;
   color:var(--accent);
 }
 
-a{color:var(--accent);text-decoration:none}
-a:hover{text-decoration:underline}
+/* ===== LINKS ===== */
+a{
+  color:var(--accent);
+  text-decoration:none;
+}
 
+a:hover{
+  text-decoration:underline;
+}
+
+/* ===== FOOTER ===== */
 footer{
   background:var(--bg2);
   padding:40px 20px;
@@ -151,6 +172,8 @@ footer{
   color:var(--muted);
 }
 </style>
+
+  
 </head>
 
 <body>
