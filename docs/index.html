@@ -1,0 +1,253 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>Projet Kael – Cartographie de la canopée par drone</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<style>
+  .logos{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  max-width:1100px;
+  margin:0 auto 40px auto; /* espace sous les logos */
+  gap:60px;
+}
+
+.logos img{
+  max-height:80px;
+  max-width:260px;
+  object-fit:contain;
+  background:white;
+  padding:10px 16px;
+  border-radius:12px;
+}
+
+body{
+  margin:0;
+  font-family: Arial, Helvetica, sans-serif;
+  background:#0e1525;
+  color:#eaeaea;
+  line-height:1.6;
+}
+header{
+  padding:60px 20px;
+  text-align:center;
+  background:linear-gradient(135deg,#1e3c72,#2a5298);
+}
+header h1{
+  font-size:42px;
+  margin-bottom:10px;
+}
+header p{
+  max-width:900px;
+  margin:auto;
+  font-size:18px;
+  opacity:0.95;
+}
+section{
+  max-width:1100px;
+  margin:auto;
+  padding:60px 20px;
+}
+h2{
+  color:#6fb1ff;
+  margin-bottom:15px;
+}
+.grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
+  gap:25px;
+}
+.card{
+  background:#151d33;
+  padding:20px;
+  border-radius:12px;
+  border:1px solid rgba(255,255,255,0.08);
+}
+.card h3{
+  margin-top:0;
+  color:#9fd0ff;
+}
+img{
+  width:100%;
+  border-radius:10px;
+  margin-top:10px;
+}
+.badges span{
+  display:inline-block;
+  background:#243b6b;
+  padding:6px 12px;
+  border-radius:20px;
+  font-size:13px;
+  margin:5px 5px 0 0;
+}
+footer{
+  background:#0b1020;
+  padding:30px 20px;
+  text-align:center;
+  font-size:14px;
+  opacity:0.85;
+}
+a{color:#6fb1ff;text-decoration:none}
+a:hover{text-decoration:underline}
+</style>
+</head>
+
+<body>
+  <header>
+    <div class="logos">
+      
+      <!-- Logo ENSEIRB -->
+      <img src="logo_enseirb.jpg" alt="ENSEIRB-MATMECA">
+  
+      <!-- Logo KAEL -->
+      <img src="logo_kael.png" alt="Projet Kael">
+  
+    </div>
+  
+  
+    <h1 style="margin-top:40px;">Projet Kael</h1>
+    <p>
+    Développement d’une méthode de <b>cartographie de la canopée forestière par drone léger</b>
+    afin d’orienter efficacement les relevés terrain de l’application <b>SAVEWOOD</b>.
+  </p>
+  <div class="badges">
+    <span>TER – ENSEIRB-MATMECA</span>
+    <span>Drone &lt; 250 g</span>
+    <span>Photogrammétrie</span>
+    <span>lidR / R</span>
+  </div>
+</header>
+
+<section>
+  <h2>🎯 Problématique</h2>
+  <p>
+    SAVEWOOD permet de caractériser précisément les arbres du sous-étage forestier grâce
+    au LiDAR des iPhone Pro. Cependant, identifier <b>les zones d’intérêt à analyser</b>
+    directement depuis le sol est long et peu efficace, car la canopée masque la vision globale.
+  </p>
+  <p>
+    L’enjeu est donc de fournir une <b>vue aérienne synthétique</b> de la parcelle afin de
+    guider l’utilisateur vers les zones les plus pertinentes.
+  </p>
+</section>
+
+<section>
+  <h2>🚁 Solution proposée</h2>
+  <div class="grid">
+    <div class="card">
+      <h3>Drone léger</h3>
+      <p>
+        Utilisation d’un <b>DJI Mini (249 g)</b> permettant une grande souplesse réglementaire
+        tout en offrant une qualité d’image suffisante pour la cartographie.
+      </p>
+    </div>
+    <div class="card">
+      <h3>Planification automatique</h3>
+      <p>
+        Développement d’un outil Python permettant de définir une zone de mission
+        et de générer automatiquement des <b>waypoints (KML / KMZ)</b>.
+      </p>
+    </div>
+    <div class="card">
+      <h3>Analyse forestière</h3>
+      <p>
+        Exploitation des nuages de points reconstruits afin d’extraire
+        des indicateurs forestiers : hauteur, densité et hétérogénéité.
+      </p>
+    </div>
+  </div>
+</section>
+
+<section>
+  <h2>🧭 Méthodologie</h2>
+  <div class="grid">
+    <div class="card">
+      <h3>1. Planification de mission</h3>
+      <p>
+        Génération automatique d’un plan de vol en pattern boustrophédon
+        prenant en compte l’altitude, le recouvrement et les paramètres caméra.
+      </p>
+    </div>
+    <div class="card">
+      <h3>2. Reconstruction 3D</h3>
+      <p>
+        Les images sont traitées avec <b>WebODM</b> pour produire une orthophoto
+        et un nuage de points dense (.LAZ).
+      </p>
+    </div>
+    <div class="card">
+      <h3>3. Analyse lidR</h3>
+      <p>
+        Le nuage de points est analysé sous <b>R</b> avec la librairie <b>lidR</b> :
+        DTM, CHM, détection des arbres et calcul des hauteurs.
+      </p>
+    </div>
+  </div>
+</section>
+
+<section>
+  <h2>📊 Résultats obtenus</h2>
+  <div class="grid">
+    <div class="card">
+      <h3>Canopy Height Model (CHM)</h3>
+      <p>
+        Carte de hauteur de canopée mettant en évidence la variabilité du peuplement.
+      </p>
+      <img src="images/chm_exemple.png" alt="CHM">
+    </div>
+    <div class="card">
+      <h3>Détection des arbres</h3>
+      <p>
+        Identification automatique des arbres et estimation de leur hauteur individuelle.
+      </p>
+      <img src="images/arbres_detectes.png" alt="Arbres détectés">
+    </div>
+    <div class="card">
+      <h3>Sorties SIG</h3>
+      <p>
+        Export des résultats sous forme <b>GeoJSON</b> pour intégration dans QGIS
+        ou dans l’écosystème SAVEWOOD.
+      </p>
+      <img src="images/qgis_resultats.png" alt="QGIS">
+    </div>
+  </div>
+</section>
+
+<section>
+  <h2>🌲 Apport pour SAVEWOOD</h2>
+  <p>
+    La cartographie de canopée permet de <b>pré-localiser</b> les zones à fort potentiel
+    avant les relevés terrain. Elle améliore :
+  </p>
+  <ul>
+    <li>le gain de temps sur le terrain,</li>
+    <li>la qualité des inventaires forestiers,</li>
+    <li>l’efficacité globale de l’application SAVEWOOD.</li>
+  </ul>
+</section>
+
+<section>
+  <h2>🔗 Liens utiles</h2>
+  <ul>
+    <li><a href="https://github.com/zinebbouti/Projet_Kael" target="_blank">
+      Dépôt GitHub du projet
+    </a> <li>
+    <a href="rapport_kael.pdf" target="_blank">
+      Rapport TER (PDF)
+    </a>
+    <li><a href="https://geoservices.ign.fr/lidarhd" target="_blank">IGN – LiDAR HD</a></li>
+  </ul>
+</section>
+
+<footer>
+  Projet Kael – TER ENSEIRB-MATMECA<br>
+  Zineb Boutmir · Ilias Ougil · Saad Khattab<br>
+  Encadrants : Lionel Lacampagne · Gabriel Gouband
+</footer>
+
+</body>
+</html>
+
