@@ -6,130 +6,172 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
 <style>
-  .card{
-  background:#151d33;
-  padding:20px;
-  border-radius:12px;
-  border:1px solid rgba(255,255,255,0.08);
-
-  display:flex;
-  flex-direction:column;
-}
-.card img{
-  margin-top:auto;   /* ⬅️ clé magique */
+:root{
+  --bg:#0e1525;
+  --bg2:#0b1020;
+  --card:#151d33;
+  --accent:#6fb1ff;
+  --accent2:#9fd0ff;
+  --text:#eaeaea;
+  --muted:#b5c0d8;
 }
 
-  .logos{
+*{box-sizing:border-box}
+
+body{
+  margin:0;
+  font-family: "Segoe UI", Arial, Helvetica, sans-serif;
+  background:linear-gradient(180deg,#0e1525,#0b1020);
+  color:var(--text);
+  line-height:1.7;
+}
+
+header{
+  padding:70px 20px 80px;
+  text-align:center;
+  background:linear-gradient(135deg,#1e3c72,#2a5298);
+}
+
+.logos{
   display:flex;
   justify-content:space-between;
   align-items:center;
   max-width:1100px;
-  margin:0 auto 40px auto; /* espace sous les logos */
-  gap:60px;
+  margin:0 auto 50px auto;
+  gap:80px;
 }
-
 .logos img{
   max-height:80px;
   max-width:260px;
-  object-fit:contain;
   background:white;
-  padding:10px 16px;
-  border-radius:12px;
+  padding:12px 18px;
+  border-radius:14px;
+  object-fit:contain;
+  box-shadow:0 10px 25px rgba(0,0,0,0.25);
 }
 
-body{
-  margin:0;
-  font-family: Arial, Helvetica, sans-serif;
-  background:#0e1525;
-  color:#eaeaea;
-  line-height:1.6;
-}
-header{
-  padding:60px 20px;
-  text-align:center;
-  background:linear-gradient(135deg,#1e3c72,#2a5298);
-}
 header h1{
-  font-size:42px;
-  margin-bottom:10px;
+  font-size:48px;
+  margin-bottom:15px;
+  letter-spacing:0.5px;
 }
 header p{
   max-width:900px;
   margin:auto;
-  font-size:18px;
+  font-size:19px;
   opacity:0.95;
 }
+
+.badges span{
+  display:inline-block;
+  background:rgba(255,255,255,0.12);
+  padding:7px 14px;
+  border-radius:20px;
+  font-size:13px;
+  margin:8px 6px 0 0;
+}
+
 section{
-  max-width:1100px;
+  max-width:1150px;
   margin:auto;
-  padding:60px 20px;
+  padding:80px 20px;
 }
+
+section.alt{
+  background:rgba(255,255,255,0.02);
+}
+
 h2{
-  color:#6fb1ff;
-  margin-bottom:15px;
+  color:var(--accent);
+  margin-bottom:18px;
+  font-size:28px;
 }
+h3{
+  color:var(--accent2);
+  margin-top:0;
+}
+
 .grid{
   display:grid;
   grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
-  gap:25px;
+  gap:28px;
 }
+
 .card{
-  background:#151d33;
-  padding:20px;
-  border-radius:12px;
+  background:var(--card);
+  padding:26px;
+  border-radius:16px;
   border:1px solid rgba(255,255,255,0.08);
+  display:flex;
+  flex-direction:column;
 }
-.card h3{
-  margin-top:0;
-  color:#9fd0ff;
-}
-img{
+
+.card img{
+  margin-top:auto;
+  border-radius:12px;
   width:100%;
+}
+
+.timeline{
+  display:grid;
+  grid-template-columns:1fr;
+  gap:20px;
+}
+.timeline div{
+  background:var(--card);
+  padding:20px;
+  border-left:4px solid var(--accent);
   border-radius:10px;
-  margin-top:10px;
 }
-.badges span{
-  display:inline-block;
-  background:#243b6b;
-  padding:6px 12px;
-  border-radius:20px;
-  font-size:13px;
-  margin:5px 5px 0 0;
+
+.stats{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+  gap:20px;
 }
+.stat{
+  background:var(--card);
+  padding:20px;
+  border-radius:14px;
+  text-align:center;
+}
+.stat strong{
+  font-size:32px;
+  color:var(--accent);
+}
+
+a{color:var(--accent);text-decoration:none}
+a:hover{text-decoration:underline}
+
 footer{
-  background:#0b1020;
-  padding:30px 20px;
+  background:var(--bg2);
+  padding:40px 20px;
   text-align:center;
   font-size:14px;
-  opacity:0.85;
+  color:var(--muted);
 }
-a{color:#6fb1ff;text-decoration:none}
-a:hover{text-decoration:underline}
 </style>
 </head>
 
 <body>
-  <header>
-    <div class="logos">
-      
-      <!-- Logo ENSEIRB -->
-      <img src="logo_enseirb.jpg" alt="ENSEIRB-MATMECA">
-  
-      <!-- Logo KAEL -->
-      <img src="logo_kael.png" alt="Projet Kael">
-  
-    </div>
-  
-  
-    <h1 style="margin-top:40px;">Projet Kael</h1>
-    <p>
+
+<header>
+  <div class="logos">
+    <img src="logo_enseirb.jpg" alt="ENSEIRB-MATMECA">
+    <img src="logo_kael.png" alt="Projet Kael">
+  </div>
+
+  <h1>Projet Kael</h1>
+  <p>
     Développement d’une méthode de <b>cartographie de la canopée forestière par drone léger</b>
     afin d’orienter efficacement les relevés terrain de l’application <b>SAVEWOOD</b>.
   </p>
+
   <div class="badges">
     <span>TER – ENSEIRB-MATMECA</span>
     <span>Drone &lt; 250 g</span>
     <span>Photogrammétrie</span>
+    <span>WebODM</span>
     <span>lidR / R</span>
   </div>
 </header>
@@ -137,127 +179,94 @@ a:hover{text-decoration:underline}
 <section>
   <h2>🎯 Problématique</h2>
   <p>
-    SAVEWOOD permet de caractériser précisément les arbres du sous-étage forestier grâce
-    au LiDAR des iPhone Pro. Cependant, identifier <b>les zones d’intérêt à analyser</b>
-    directement depuis le sol est long et peu efficace, car la canopée masque la vision globale.
+    SAVEWOOD permet une qualification fine des arbres du sous-étage grâce au LiDAR mobile.
+    Toutefois, l’identification préalable des <b>zones d’intérêt</b> à l’échelle de la parcelle
+    reste complexe depuis le sol.
   </p>
   <p>
-    L’enjeu est donc de fournir une <b>vue aérienne synthétique</b> de la parcelle afin de
-    guider l’utilisateur vers les zones les plus pertinentes.
+    Le projet Kael vise à fournir une <b>vision aérienne synthétique</b> pour guider les campagnes
+    terrain et optimiser le temps de mesure.
   </p>
 </section>
 
+<section class="alt">
+  <h2>🧭 Chaîne de traitement globale</h2>
+  <div class="timeline">
+    <div>📍 Planification automatique de mission (Python / PyQt / Leaflet)</div>
+    <div>🚁 Acquisition d’images par drone léger (DJI Mini)</div>
+    <div>🧩 Reconstruction 3D par photogrammétrie (WebODM)</div>
+    <div>🌲 Analyse forestière à partir du nuage de points (R / lidR)</div>
+    <div>🗺️ Export SIG et intégration dans SAVEWOOD</div>
+  </div>
+</section>
+
 <section>
-  <h2>🚁 Solution proposée</h2>
+  <h2>🔬 Méthodologie détaillée</h2>
   <div class="grid">
     <div class="card">
-      <h3>Drone léger</h3>
+      <h3>Planification de mission</h3>
       <p>
-        Utilisation d’un <b>DJI Mini (249 g)</b> permettant une grande souplesse réglementaire
-        tout en offrant une qualité d’image suffisante pour la cartographie.
+        Génération automatique des waypoints à partir d’un polygone utilisateur,
+        en tenant compte de l’altitude, du recouvrement frontal et latéral,
+        et des paramètres optiques du capteur.
       </p>
+      <img src="paln_vol.png">
     </div>
+
     <div class="card">
-      <h3>Planification automatique</h3>
+      <h3>Reconstruction 3D</h3>
       <p>
-        Développement d’un outil Python permettant de définir une zone de mission
-        et de générer automatiquement des <b>waypoints (KML / KMZ)</b>.
+        Traitement des images avec WebODM pour produire une orthophoto
+        et un nuage de points dense géoréférencé.
       </p>
+      <img src="reconstruction_3D.png">
     </div>
+
     <div class="card">
-      <h3>Analyse forestière</h3>
+      <h3>Analyse lidR</h3>
       <p>
-        Exploitation des nuages de points reconstruits afin d’extraire
-        des indicateurs forestiers : hauteur, densité et hétérogénéité.
+        Extraction d’indicateurs forestiers : DTM, CHM,
+        détection automatique des arbres et estimation des hauteurs individuelles.
       </p>
     </div>
   </div>
 </section>
 
-<section>
-  <h2>🧭 Méthodologie</h2>
-  <div class="grid">
-    <div class="card">
-  <h3>1. Planification de mission</h3>
-  <p>
-    Génération automatique d’un plan de vol en pattern boustrophédon
-    prenant en compte l’altitude, le recouvrement et les paramètres caméra.
-  </p>
-
-  <img src="paln_vol.png"
-       alt="Planification automatique de mission drone">
-</div>
-
-    <div class="card">
-      <h3>2. Reconstruction 3D</h3>
-      <p>
-        Les images sont traitées avec <b>WebODM</b> pour produire une orthophoto
-        et un nuage de points dense (.LAZ).
-      </p>
-      
-  <img src="reconstruction_3D.png"
-       alt="Reconstruction 3D">
-    </div>
-    <div class="card">
-      <h3>3. Analyse lidR</h3>
-      <p>
-        Le nuage de points est analysé sous <b>R</b> avec la librairie <b>lidR</b> :
-        DTM, CHM, détection des arbres et calcul des hauteurs.
-      </p>
-    </div>
-  </div>
-</section>
-
-<section>
-  <h2>📊 Résultats obtenus</h2>
-  <div class="grid">
-    <div class="card">
-      <h3>Canopy Height Model (CHM)</h3>
-      <p>
-        Carte de hauteur de canopée mettant en évidence la variabilité du peuplement.
-      </p>
-      <img src="images/chm_exemple.png" alt="CHM">
-    </div>
-    <div class="card">
-      <h3>Détection des arbres</h3>
-      <p>
-        Identification automatique des arbres et estimation de leur hauteur individuelle.
-      </p>
-      <img src="images/arbres_detectes.png" alt="Arbres détectés">
-    </div>
-    <div class="card">
-      <h3>Sorties SIG</h3>
-      <p>
-        Export des résultats sous forme <b>GeoJSON</b> pour intégration dans QGIS
-        ou dans l’écosystème SAVEWOOD.
-      </p>
-      <img src="images/qgis_resultats.png" alt="QGIS">
-    </div>
+<section class="alt">
+  <h2>📊 Résultats clés</h2>
+  <div class="stats">
+    <div class="stat"><strong>8.5 ha</strong><br>Surface analysée</div>
+    <div class="stat"><strong>150+</strong><br>Arbres détectés</div>
+    <div class="stat"><strong>15–20 m</strong><br>Hauteur moyenne</div>
+    <div class="stat"><strong>&lt; 250 g</strong><br>Drone utilisé</div>
   </div>
 </section>
 
 <section>
   <h2>🌲 Apport pour SAVEWOOD</h2>
-  <p>
-    La cartographie de canopée permet de <b>pré-localiser</b> les zones à fort potentiel
-    avant les relevés terrain. Elle améliore :
-  </p>
   <ul>
-    <li>le gain de temps sur le terrain,</li>
-    <li>la qualité des inventaires forestiers,</li>
-    <li>l’efficacité globale de l’application SAVEWOOD.</li>
+    <li>Pré-localisation des zones à fort potentiel</li>
+    <li>Réduction du temps terrain</li>
+    <li>Meilleure planification des inventaires</li>
+    <li>Complémentarité drone / LiDAR mobile</li>
+  </ul>
+</section>
+
+<section class="alt">
+  <h2>⚠️ Limites et perspectives</h2>
+  <ul>
+    <li>Limites liées à la photogrammétrie en canopée dense</li>
+    <li>Dépendance aux conditions météo</li>
+    <li>Perspectives de fusion avec le LiDAR HD IGN</li>
+    <li>Automatisation complète de la détection de zones d’intérêt</li>
   </ul>
 </section>
 
 <section>
-  <h2>🔗 Liens utiles</h2>
+  <h2>🔗 Liens</h2>
   <ul>
-    <li><a href="https://github.com/zinebbouti/Projet_Kael" target="_blank">
-      Dépôt GitHub du projet
-    </a> <li>
-    <a href="rapport_kael.pdf" target="_blank">
-      Rapport TER (PDF)
-    </a>
+    <li><a href="https://github.com/zinebbouti/Projet_Kael" target="_blank">Dépôt GitHub</a></li>
+    <li><a href="rapport_kael.pdf" target="_blank">Rapport TER (PDF)</a></li>
     <li><a href="https://geoservices.ign.fr/lidarhd" target="_blank">IGN – LiDAR HD</a></li>
   </ul>
 </section>
@@ -270,4 +279,3 @@ a:hover{text-decoration:underline}
 
 </body>
 </html>
-
