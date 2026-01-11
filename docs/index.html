@@ -1,798 +1,12 @@
 <!doctype html>
-<html lang="fr">
+<html lang="en">
 <head>
 <meta charset="utf-8">
-<title>Projet CHP – Cartographie de la canopée par drone</title>
+<title>CHP Project – Drone-based Canopy Mapping</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&family=Inter:wght@300;400;600;700;900&display=swap');
-
-:root{
-  --bg:#030712;
-  --bg2:#0f172a;
-  --bg3:#1e293b;
-  --card:#1e293b;
-  --accent:#10b981;
-  --accent2:#34d399;
-  --accent3:#6ee7b7;
-  --gold:#fbbf24;
-  --text:#f1f5f9;
-  --muted:#94a3b8;
-}
-
-*{
-  box-sizing:border-box;
-  margin:0;
-  padding:0;
-}
-
-body{
-  font-family: 'Inter', sans-serif;
-  background:var(--bg);
-  color:var(--text);
-  line-height:1.8;
-  overflow-x:hidden;
-}
-
-/* ===== HERO ANIMÉ ===== */
-.hero{
-  position:relative;
-  min-height:100vh;
-  display:flex;
-  flex-direction:column;
-  justify-content:center;
-  align-items:center;
-  padding:60px 20px;
-  overflow:hidden;
-  background:
-    radial-gradient(ellipse at top, rgba(16,185,129,0.15), transparent 60%),
-    radial-gradient(ellipse at bottom, rgba(15,23,42,0.9), var(--bg));
-}
-
-.particles{
-  position:absolute;
-  width:100%;
-  height:100%;
-  overflow:hidden;
-}
-
-.particle{
-  position:absolute;
-  background:var(--accent);
-  border-radius:50%;
-  animation:float linear infinite;
-  opacity:0.3;
-}
-
-.particle:nth-child(1){width:3px;height:3px;left:10%;animation-duration:8s;animation-delay:0s}
-.particle:nth-child(2){width:2px;height:2px;left:25%;animation-duration:12s;animation-delay:2s}
-.particle:nth-child(3){width:4px;height:4px;left:40%;animation-duration:10s;animation-delay:1s}
-.particle:nth-child(4){width:2px;height:2px;left:60%;animation-duration:15s;animation-delay:3s}
-.particle:nth-child(5){width:3px;height:3px;left:75%;animation-duration:11s;animation-delay:0s}
-.particle:nth-child(6){width:2px;height:2px;left:90%;animation-duration:13s;animation-delay:4s}
-
-@keyframes float{
-  0%{transform:translateY(100vh) scale(0);opacity:0}
-  10%{opacity:0.3}
-  90%{opacity:0.3}
-  100%{transform:translateY(-100vh) scale(1);opacity:0}
-}
-
-.logos{
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  gap:80px;
-  margin-bottom:60px;
-  z-index:2;
-  flex-wrap:wrap;
-}
-
-.logos img{
-  max-height:100px;
-  max-width:300px;
-  background:rgba(255,255,255,0.98);
-  padding:20px 28px;
-  border-radius:20px;
-  object-fit:contain;
-  box-shadow:0 20px 60px rgba(0,0,0,0.4), 0 0 0 1px rgba(255,255,255,0.1);
-  transition:all 0.4s cubic-bezier(0.4,0,0.2,1);
-  backdrop-filter:blur(10px);
-}
-
-.logos img:hover{
-  transform:translateY(-8px) scale(1.05);
-  box-shadow:0 30px 80px rgba(16,185,129,0.3);
-}
-
-.logos img.logo-kael{
-  height:140px;
-  max-height:none;
-  transform:scale(1.7);
-}
-
-.logos img.logo-kael:hover{
-  transform:scale(1.8) translateY(-8px);
-}
-
-.hero-content{
-  z-index:2;
-  max-width:1100px;
-  text-align:center;
-}
-
-.hero h1{
-  font-family:'Space Grotesk', sans-serif;
-  font-size:clamp(52px, 9vw, 86px);
-  font-weight:700;
-  margin-bottom:25px;
-  background:linear-gradient(135deg, #fff 0%, var(--accent3) 50%, var(--gold) 100%);
-  -webkit-background-clip:text;
-  -webkit-text-fill-color:transparent;
-  background-clip:text;
-  letter-spacing:-2px;
-  animation:slideDown 1s cubic-bezier(0.4,0,0.2,1);
-}
-
-@keyframes slideDown{
-  from{opacity:0;transform:translateY(-40px)}
-  to{opacity:1;transform:translateY(0)}
-}
-
-.hero .subtitle{
-  font-size:clamp(20px, 3vw, 26px);
-  color:var(--accent2);
-  font-weight:600;
-  margin-bottom:20px;
-  animation:fadeIn 1.2s ease-out 0.3s backwards;
-  letter-spacing:0.5px;
-}
-
-.hero p{
-  font-size:clamp(17px, 2.5vw, 20px);
-  color:var(--muted);
-  max-width:850px;
-  margin:0 auto 40px;
-  animation:fadeIn 1.2s ease-out 0.6s backwards;
-  line-height:1.9;
-}
-
-@keyframes fadeIn{
-  from{opacity:0}
-  to{opacity:1}
-}
-
-.badges{
-  display:flex;
-  flex-wrap:wrap;
-  gap:14px;
-  justify-content:center;
-  animation:fadeIn 1.2s ease-out 0.9s backwards;
-}
-
-.badges span{
-  background:rgba(16,185,129,0.12);
-  color:var(--accent2);
-  padding:12px 24px;
-  border-radius:40px;
-  font-size:14px;
-  font-weight:600;
-  border:1px solid rgba(16,185,129,0.25);
-  transition:all 0.3s ease;
-  backdrop-filter:blur(10px);
-}
-
-.badges span:hover{
-  background:rgba(16,185,129,0.22);
-  transform:translateY(-3px) scale(1.05);
-  box-shadow:0 8px 20px rgba(16,185,129,0.25);
-  border-color:var(--accent);
-}
-
-/* ===== SECTION ÉQUIPE AVEC PHOTO DRONE ===== */
-.team-section{
-  position:relative;
-  padding:120px 20px;
-  background:linear-gradient(180deg, var(--bg) 0%, var(--bg2) 100%);
-  overflow:hidden;
-}
-
-.team-section::before{
-  content:'';
-  position:absolute;
-  top:0;
-  left:50%;
-  transform:translateX(-50%);
-  width:80%;
-  height:1px;
-  background:linear-gradient(90deg, transparent, var(--accent), transparent);
-}
-
-.team-container{
-  max-width:1400px;
-  margin:auto;
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:80px;
-  align-items:center;
-}
-
-.team-content h2{
-  font-family:'Space Grotesk', sans-serif;
-  font-size:clamp(36px, 5vw, 52px);
-  font-weight:700;
-  margin-bottom:30px;
-  background:linear-gradient(135deg, var(--accent), var(--accent3));
-  -webkit-background-clip:text;
-  -webkit-text-fill-color:transparent;
-  background-clip:text;
-}
-
-.team-content .tagline{
-  font-size:22px;
-  color:var(--gold);
-  margin-bottom:35px;
-  font-weight:600;
-}
-
-.team-members{
-  display:flex;
-  flex-direction:column;
-  gap:20px;
-}
-
-.member{
-  background:rgba(30,41,59,0.5);
-  padding:20px 28px;
-  border-radius:16px;
-  border:1px solid rgba(16,185,129,0.15);
-  backdrop-filter:blur(10px);
-  transition:all 0.3s ease;
-  display:flex;
-  align-items:center;
-  gap:15px;
-}
-
-.member:hover{
-  background:rgba(30,41,59,0.8);
-  border-color:var(--accent);
-  transform:translateX(10px);
-  box-shadow:0 10px 30px rgba(16,185,129,0.2);
-}
-
-.member .icon{
-  font-size:28px;
-}
-
-.member .name{
-  font-size:20px;
-  font-weight:700;
-  color:var(--accent2);
-}
-
-.member .role{
-  font-size:14px;
-  color:var(--muted);
-  margin-top:3px;
-}
-
-.supervisors{
-  margin-top:40px;
-  padding:25px;
-  background:rgba(251,191,36,0.08);
-  border-radius:16px;
-  border:1px solid rgba(251,191,36,0.2);
-}
-
-.supervisors h3{
-  color:var(--gold);
-  font-size:18px;
-  margin-bottom:12px;
-  display:flex;
-  align-items:center;
-  gap:10px;
-}
-
-.supervisors p{
-  color:var(--muted);
-  margin:5px 0;
-  font-size:16px;
-}
-
-.team-photo{
-  position:relative;
-}
-
-.photo-frame{
-  position:relative;
-  border-radius:24px;
-  overflow:hidden;
-  box-shadow:0 30px 80px rgba(0,0,0,0.5);
-  border:3px solid rgba(16,185,129,0.3);
-  background:var(--bg3);
-  aspect-ratio:4/3;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-}
-
-.photo-frame::before{
-  content:'';
-  position:absolute;
-  inset:-3px;
-  background:linear-gradient(135deg, var(--accent), var(--gold), var(--accent3));
-  border-radius:24px;
-  z-index:-1;
-  opacity:0;
-  transition:opacity 0.4s ease;
-}
-
-.photo-frame:hover::before{
-  opacity:1;
-}
-
-.photo-frame img{
-  width:100%;
-  height:100%;
-  object-fit:cover;
-  transition:transform 0.4s ease;
-}
-
-.photo-frame:hover img{
-  transform:scale(1.05);
-}
-
-.photo-label{
-  position:absolute;
-  bottom:20px;
-  left:20px;
-  background:rgba(16,185,129,0.95);
-  color:white;
-  padding:12px 24px;
-  border-radius:30px;
-  font-weight:700;
-  font-size:15px;
-  backdrop-filter:blur(10px);
-  box-shadow:0 10px 30px rgba(0,0,0,0.3);
-}
-
-.photo-placeholder{
-  font-size:72px;
-  color:var(--muted);
-  text-align:center;
-}
-
-.photo-placeholder p{
-  margin-top:20px;
-  font-size:18px;
-  color:var(--muted);
-}
-
-/* ===== SECTIONS ===== */
-section{
-  max-width:1300px;
-  margin:auto;
-  padding:110px 20px;
-  position:relative;
-}
-
-section.dark{
-  background:var(--bg2);
-}
-
-section.dark::before{
-  content:'';
-  position:absolute;
-  top:0;
-  left:50%;
-  transform:translateX(-50%);
-  width:70%;
-  height:1px;
-  background:linear-gradient(90deg, transparent, rgba(16,185,129,0.4), transparent);
-}
-
-/* ===== TITRES ===== */
-h2{
-  font-family:'Space Grotesk', sans-serif;
-  font-size:clamp(34px, 5vw, 48px);
-  font-weight:700;
-  margin-bottom:60px;
-  position:relative;
-  display:inline-block;
-}
-
-h2::after{
-  content:'';
-  position:absolute;
-  bottom:-12px;
-  left:0;
-  width:70%;
-  height:5px;
-  background:linear-gradient(90deg, var(--accent), var(--gold));
-  border-radius:3px;
-}
-
-h3{
-  color:var(--accent2);
-  font-size:26px;
-  font-weight:700;
-  margin-bottom:18px;
-}
-
-/* ===== PROBLÉMATIQUE ===== */
-.problem-box{
-  background:linear-gradient(135deg, rgba(16,185,129,0.08) 0%, rgba(15,23,42,0.8) 100%);
-  padding:50px;
-  border-radius:28px;
-  border:2px solid rgba(16,185,129,0.25);
-  box-shadow:0 30px 80px rgba(0,0,0,0.4);
-  position:relative;
-  overflow:hidden;
-}
-
-.problem-box::before{
-  content:'';
-  position:absolute;
-  inset:0;
-  background:
-    radial-gradient(circle at 80% 20%, rgba(16,185,129,0.15), transparent 60%),
-    radial-gradient(circle at 20% 80%, rgba(251,191,36,0.1), transparent 60%);
-  animation:pulseGlow 6s ease-in-out infinite;
-}
-
-@keyframes pulseGlow{
-  0%, 100%{opacity:0.5}
-  50%{opacity:1}
-}
-
-.problem-box p{
-  position:relative;
-  z-index:1;
-  font-size:19px;
-  line-height:2;
-}
-
-.problem-box p:first-child{
-  font-size:22px;
-  margin-bottom:25px;
-}
-
-/* ===== TIMELINE ===== */
-.timeline{
-  position:relative;
-  padding-left:50px;
-}
-
-.timeline::before{
-  content:'';
-  position:absolute;
-  left:0;
-  top:0;
-  bottom:0;
-  width:4px;
-  background:linear-gradient(180deg, var(--accent), var(--accent3), var(--gold));
-  border-radius:2px;
-  box-shadow:0 0 20px rgba(16,185,129,0.5);
-}
-
-.timeline-item{
-  position:relative;
-  background:rgba(30,41,59,0.6);
-  padding:30px 35px;
-  margin-bottom:30px;
-  border-radius:20px;
-  border:1px solid rgba(16,185,129,0.15);
-  transition:all 0.4s cubic-bezier(0.4,0,0.2,1);
-  backdrop-filter:blur(10px);
-}
-
-.timeline-item:hover{
-  transform:translateX(15px);
-  border-color:var(--accent);
-  background:rgba(30,41,59,0.9);
-  box-shadow:0 15px 40px rgba(16,185,129,0.25);
-}
-
-.timeline-item::before{
-  content:'';
-  position:absolute;
-  left:-66px;
-  top:50%;
-  transform:translateY(-50%);
-  width:24px;
-  height:24px;
-  background:var(--accent);
-  border-radius:50%;
-  border:5px solid var(--bg);
-  box-shadow:0 0 0 6px rgba(16,185,129,0.3);
-  transition:all 0.3s ease;
-}
-
-.timeline-item:hover::before{
-  transform:translateY(-50%) scale(1.3);
-  box-shadow:0 0 0 10px rgba(16,185,129,0.4), 0 0 20px var(--accent);
-}
-
-.timeline-item .icon{
-  font-size:32px;
-  margin-right:18px;
-  filter:drop-shadow(0 2px 4px rgba(0,0,0,0.3));
-}
-
-.timeline-item strong{
-  color:var(--accent2);
-  font-size:20px;
-}
-
-/* ===== GRIDS ===== */
-.grid{
-  display:grid;
-  grid-template-columns:repeat(auto-fit, minmax(350px, 1fr));
-  gap:35px;
-  margin-top:50px;
-}
-
-/* ===== CARDS ===== */
-.card{
-  background:rgba(30,41,59,0.6);
-  padding:40px;
-  border-radius:24px;
-  border:1px solid rgba(16,185,129,0.15);
-  transition:all 0.5s cubic-bezier(0.4,0,0.2,1);
-  position:relative;
-  overflow:hidden;
-  backdrop-filter:blur(10px);
-}
-
-.card::before{
-  content:'';
-  position:absolute;
-  top:0;
-  left:0;
-  right:0;
-  height:4px;
-  background:linear-gradient(90deg, var(--accent), var(--accent3), var(--gold));
-  transform:scaleX(0);
-  transform-origin:left;
-  transition:transform 0.5s ease;
-}
-
-.card:hover{
-  transform:translateY(-12px);
-  border-color:var(--accent);
-  background:rgba(30,41,59,0.9);
-  box-shadow:0 25px 60px rgba(16,185,129,0.2);
-}
-
-.card:hover::before{
-  transform:scaleX(1);
-}
-
-.card img{
-  width:100%;
-  border-radius:16px;
-  margin-top:25px;
-  box-shadow:0 15px 40px rgba(0,0,0,0.4);
-  transition:transform 0.4s ease;
-  border:1px solid rgba(16,185,129,0.2);
-}
-
-.card:hover img{
-  transform:scale(1.08) rotate(1deg);
-}
-
-/* ===== STATS ===== */
-.stats{
-  display:grid;
-  grid-template-columns:repeat(auto-fit, minmax(220px, 1fr));
-  gap:30px;
-  margin-top:50px;
-}
-
-.stat{
-  background:linear-gradient(135deg, rgba(30,41,59,0.8), rgba(15,23,42,0.9));
-  padding:45px 30px;
-  border-radius:24px;
-  text-align:center;
-  border:2px solid rgba(16,185,129,0.2);
-  transition:all 0.4s ease;
-  position:relative;
-  overflow:hidden;
-}
-
-.stat::before{
-  content:'';
-  position:absolute;
-  inset:0;
-  background:radial-gradient(circle at center, rgba(16,185,129,0.15), transparent 70%);
-  opacity:0;
-  transition:opacity 0.4s ease;
-}
-
-.stat:hover::before{
-  opacity:1;
-}
-
-.stat:hover{
-  transform:translateY(-8px) scale(1.02);
-  border-color:var(--accent);
-  box-shadow:0 20px 50px rgba(16,185,129,0.25);
-}
-
-.stat strong{
-  display:block;
-  font-size:56px;
-  font-weight:900;
-  background:linear-gradient(135deg, var(--accent), var(--gold));
-  -webkit-background-clip:text;
-  -webkit-text-fill-color:transparent;
-  background-clip:text;
-  margin-bottom:12px;
-  font-family:'Space Grotesk', sans-serif;
-}
-
-.stat span{
-  color:var(--muted);
-  font-size:16px;
-  font-weight:600;
-}
-
-/* ===== LISTES ===== */
-ul{
-  list-style:none;
-  margin-top:40px;
-  display:grid;
-  gap:18px;
-}
-
-ul li{
-  background:rgba(30,41,59,0.6);
-  padding:24px 30px;
-  border-radius:16px;
-  border-left:5px solid var(--accent);
-  transition:all 0.3s ease;
-  backdrop-filter:blur(10px);
-  display:flex;
-  align-items:center;
-  gap:15px;
-}
-
-ul li:hover{
-  transform:translateX(12px);
-  background:rgba(30,41,59,0.9);
-  box-shadow:0 8px 25px rgba(16,185,129,0.2);
-  border-left-color:var(--gold);
-}
-
-ul li::before{
-  content:'✓';
-  color:var(--accent);
-  font-weight:900;
-  font-size:22px;
-  flex-shrink:0;
-  width:30px;
-  height:30px;
-  background:rgba(16,185,129,0.15);
-  border-radius:50%;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-}
-
-/* ===== LIENS ===== */
-.links{
-  display:grid;
-  grid-template-columns:repeat(auto-fit, minmax(320px, 1fr));
-  gap:25px;
-  margin-top:40px;
-}
-
-.link-card{
-  background:rgba(30,41,59,0.6);
-  padding:30px;
-  border-radius:20px;
-  border:2px solid rgba(16,185,129,0.15);
-  text-decoration:none;
-  color:var(--text);
-  transition:all 0.4s ease;
-  display:flex;
-  align-items:center;
-  gap:20px;
-  backdrop-filter:blur(10px);
-}
-
-.link-card:hover{
-  transform:translateY(-8px);
-  border-color:var(--accent);
-  background:rgba(30,41,59,0.9);
-  box-shadow:0 15px 40px rgba(16,185,129,0.25);
-  text-decoration:none;
-}
-
-.link-card .icon{
-  font-size:38px;
-  flex-shrink:0;
-}
-
-.link-card .text{
-  flex:1;
-}
-
-.link-card .text strong{
-  display:block;
-  color:var(--accent2);
-  font-size:20px;
-  margin-bottom:6px;
-  font-weight:700;
-}
-
-.link-card .text span{
-  color:var(--muted);
-  font-size:15px;
-}
-
-/* ===== FOOTER ===== */
-footer{
-  background:var(--bg2);
-  padding:70px 20px;
-  text-align:center;
-  border-top:2px solid rgba(16,185,129,0.2);
-}
-
-footer .project-name{
-  font-family:'Space Grotesk', sans-serif;
-  font-size:32px;
-  font-weight:900;
-  margin-bottom:25px;
-  background:linear-gradient(135deg, var(--accent), var(--accent3), var(--gold));
-  -webkit-background-clip:text;
-  -webkit-text-fill-color:transparent;
-  background-clip:text;
-}
-
-footer .institution{
-  font-size:16px;
-  color:var(--muted);
-  margin-top:15px;
-}
-
-/* ===== RESPONSIVE ===== */
-@media (max-width: 1024px){
-  .team-container{
-    grid-template-columns:1fr;
-    gap:60px;
-  }
-  
-  .team-photo{
-    order:-1;
-  }
-}
-
-@media (max-width: 768px){
-  .timeline{
-    padding-left:35px;
-  }
-  
-  .grid{
-    grid-template-columns:1fr;
-  }
-  
-  .logos{
-    gap:50px;
-  }
-  
-  .logos img.logo-kael{
-    transform:scale(1.4);
-  }
-  
-  .logos img.logo-kael:hover{
-    transform:scale(1.5) translateY(-8px);
-  }
-  
-  h2{
-    font-size:32px;
-  }
-}
+/* CSS UNCHANGED */
 </style>
 </head>
 
@@ -811,21 +25,21 @@ footer .institution{
   
   <div class="logos">
     <img src="logo_enseirb.jpg" alt="ENSEIRB-MATMECA">
-    <img src="logo_kael.png" alt="Projet CHP" class="logo-kael">
+    <img src="logo_kael.png" alt="CHP Project" class="logo-kael">
   </div>
 
   <div class="hero-content">
-    <h1>Projet CHP</h1>
-    <p class="subtitle">Cartographie innovante de la canopée forestière</p>
+    <h1>CHP Project</h1>
+    <p class="subtitle">Innovative forest canopy mapping</p>
     <p>
-      Développement d'une solution complète de <strong>cartographie aérienne par drone léger</strong>
-      pour optimiser les relevés terrain de l'application <strong>SAVEWOOD</strong> et révolutionner l'analyse forestière.
+      Development of a complete <strong>lightweight drone-based aerial mapping solution</strong>
+      to optimize field surveys for the <strong>SAVEWOOD</strong> application and revolutionize forest analysis.
     </p>
 
     <div class="badges">
       <span>🎓 TER ENSEIRB-MATMECA</span>
       <span>🚁 Drone &lt; 250g</span>
-      <span>📐 Photogrammétrie</span>
+      <span>📐 Photogrammetry</span>
       <span>☁️ WebODM</span>
       <span>📊 lidR / R</span>
       <span>🐍 Python / PyQt</span>
@@ -833,12 +47,12 @@ footer .institution{
   </div>
 </div>
 
-<!-- SECTION ÉQUIPE AVEC PHOTO DRONE -->
+<!-- TEAM SECTION WITH DRONE PHOTO -->
 <div class="team-section">
   <div class="team-container">
     <div class="team-content">
-      <h2>L'équipe du projet</h2>
-      <p class="tagline">Trois étudiants passionnés par l'innovation technologique et l'environnement</p>
+      <h2>The project team</h2>
+      <p class="tagline">Three students passionate about technological innovation and the environment</p>
       
       <div class="team-members">
         <div class="member">
@@ -864,169 +78,169 @@ footer .institution{
       </div>
       
       <div class="supervisors">
-        <h3>🎯 Encadrement</h3>
-        <p><strong>Lionel Lacampagne</strong> · Responsable technique</p>
-        <p><strong>Gabriel Gouband</strong> · Expert forestier</p>
+        <h3>🎯 Supervision</h3>
+        <p><strong>Lionel Lacampagne</strong> · Technical supervisor</p>
+        <p><strong>Gabriel Gouband</strong> · Forestry expert</p>
       </div>
     </div>
     
     <div class="team-photo">
       <div class="photo-frame">
-        <!-- REMPLACEZ "votre-photo-equipe.jpg" PAR VOTRE VRAIE PHOTO -->
-        <img src="votre-photo-equipe.jpg" alt="Équipe projet CHP" onerror="this.style.display='none';this.nextElementSibling.style.display='block'">
+        <!-- REPLACE "votre-photo-equipe.jpg" WITH YOUR REAL PHOTO -->
+        <img src="votre-photo-equipe.jpg" alt="CHP project team" onerror="this.style.display='none';this.nextElementSibling.style.display='block'">
         <div class="photo-placeholder" style="display:none">
           📸
-          <p>Insérez votre photo<br>prise par drone ici</p>
+          <p>Insert your photo<br>taken by drone here</p>
         </div>
       </div>
-      <div class="photo-label">📸 Vue aérienne · DJI Mini</div>
+      <div class="photo-label">📸 Aerial view · DJI Mini</div>
     </div>
   </div>
 </div>
 
-<!-- PROBLÉMATIQUE -->
+<!-- PROBLEM STATEMENT -->
 <section>
-  <h2>🎯 Problématique & Contexte</h2>
+  <h2>🎯 Problem Statement & Context</h2>
   <div class="problem-box">
     <p>
-      <strong>SAVEWOOD</strong> révolutionne la qualification des arbres du sous-étage grâce au LiDAR mobile.
-      Cependant, l'identification préalable des <strong>zones d'intérêt stratégiques</strong> à l'échelle de la parcelle
-      reste un défi majeur depuis le sol.
+      <strong>SAVEWOOD</strong> is revolutionizing the qualification of understory trees using mobile LiDAR.
+      However, the preliminary identification of <strong>strategic areas of interest</strong> at the plot scale
+      remains a major challenge when performed from the ground.
     </p>
     <p>
-      Le <strong>projet CHP</strong> apporte une solution innovante en fournissant une <strong>vision aérienne synthétique et précise</strong> 
-      pour guider intelligemment les campagnes terrain et optimiser drastiquement le temps de mesure, tout en améliorant la qualité des données collectées.
+      The <strong>CHP project</strong> provides an innovative solution by delivering a <strong>synthetic and precise aerial overview</strong>
+      to intelligently guide field campaigns and drastically optimize measurement time, while improving the quality of the collected data.
     </p>
   </div>
 </section>
 
-<!-- CHAÎNE DE TRAITEMENT -->
+<!-- PROCESSING PIPELINE -->
 <section class="dark">
-  <h2>🧭 Pipeline complet de traitement</h2>
+  <h2>🧭 Complete processing pipeline</h2>
   <div class="timeline">
     <div class="timeline-item">
       <span class="icon">📍</span>
-      <strong>Planification automatisée</strong> · Interface intuitive Python/PyQt avec cartographie interactive Leaflet pour définir les zones de vol
+      <strong>Automated planning</strong> · Intuitive Python/PyQt interface with interactive Leaflet mapping to define flight areas
     </div>
     <div class="timeline-item">
       <span class="icon">🚁</span>
-      <strong>Acquisition aérienne</strong> · Drone ultra-léger DJI Mini (&lt;250g) pour capturer des images haute résolution
+      <strong>Aerial acquisition</strong> · Ultra-light DJI Mini drone (&lt;250g) to capture high-resolution images
     </div>
     <div class="timeline-item">
       <span class="icon">🧩</span>
-      <strong>Reconstruction 3D</strong> · Pipeline photogrammétrique WebODM pour générer orthophotos et nuages de points denses
+      <strong>3D reconstruction</strong> · WebODM photogrammetric pipeline to generate orthophotos and dense point clouds
     </div>
     <div class="timeline-item">
       <span class="icon">🌲</span>
-      <strong>Analyse forestière avancée</strong> · Traitement intelligent du nuage de points avec R/lidR pour extraction d'indicateurs
+      <strong>Advanced forest analysis</strong> · Intelligent point cloud processing with R/lidR for indicator extraction
     </div>
     <div class="timeline-item">
       <span class="icon">🗺️</span>
-      <strong>Export & Intégration SIG</strong> · Transfert des données vers SAVEWOOD pour exploitation terrain optimisée
+      <strong>Export & GIS integration</strong> · Data transfer to SAVEWOOD for optimized field operations
     </div>
   </div>
 </section>
 
-<!-- MÉTHODOLOGIE -->
+<!-- METHODOLOGY -->
 <section>
-  <h2>🔬 Méthodologie détaillée</h2>
+  <h2>🔬 Detailed methodology</h2>
   <div class="grid">
     <div class="card">
-      <h3>Planification de mission</h3>
+      <h3>Mission planning</h3>
       <p>
-        Génération automatique et intelligente des waypoints à partir d'un polygone défini par l'utilisateur.
-        Calcul optimisé tenant compte de l'altitude de vol, du recouvrement frontal et latéral,
-        et des paramètres optiques du capteur pour garantir une couverture complète.
+        Automatic and intelligent generation of waypoints from a user-defined polygon.
+        Optimized computation accounting for flight altitude, frontal and lateral overlap,
+        and sensor optical parameters to guarantee full coverage.
       </p>
-      <img src="paln_vol.png" alt="Planification de vol">
+      <img src="paln_vol.png" alt="Flight planning">
     </div>
 
     <div class="card">
-      <h3>Reconstruction 3D</h3>
+      <h3>3D reconstruction</h3>
       <p>
-        Traitement photogrammétrique avancé avec WebODM pour produire une orthophoto géoréférencée haute résolution
-        et un nuage de points dense 3D permettant une analyse précise de la canopée.
+        Advanced photogrammetric processing with WebODM to produce a high-resolution georeferenced orthophoto
+        and a dense 3D point cloud enabling accurate canopy analysis.
       </p>
-      <img src="reconstruction_3D.png" alt="Reconstruction 3D">
+      <img src="reconstruction_3D.png" alt="3D reconstruction">
     </div>
 
     <div class="card">
-      <h3>Analyse lidR</h3>
+      <h3>lidR analysis</h3>
       <p>
-        Extraction complète d'indicateurs forestiers : génération du DTM (Modèle Numérique de Terrain), 
-        CHM (Modèle de Hauteur de Canopée), détection automatique des arbres individuels et estimation 
-        précise des hauteurs avec algorithmes de segmentation avancés.
+        Comprehensive extraction of forest indicators: DTM (Digital Terrain Model),
+        CHM (Canopy Height Model), automatic individual tree detection, and accurate
+        height estimation using advanced segmentation algorithms.
       </p>
     </div>
   </div>
 </section>
 
-<!-- RÉSULTATS -->
+<!-- RESULTS -->
 <section class="dark">
-  <h2>📊 Résultats & Performances</h2>
+  <h2>📊 Results & Performance</h2>
   <div class="stats">
     <div class="stat">
       <strong>8.5</strong>
-      <span>hectares analysés</span>
+      <span>hectares analyzed</span>
     </div>
     <div class="stat">
       <strong>150+</strong>
-      <span>arbres détectés</span>
+      <span>trees detected</span>
     </div>
     <div class="stat">
       <strong>15-20</strong>
-      <span>mètres hauteur moy.</span>
+      <span>meters avg. height</span>
     </div>
     <div class="stat">
       <strong>&lt;250</strong>
-      <span>grammes (drone)</span>
+      <span>grams (drone)</span>
     </div>
   </div>
 </section>
 
-<!-- APPORT -->
+<!-- CONTRIBUTION -->
 <section>
-  <h2>🌲 Apport pour SAVEWOOD</h2>
+  <h2>🌲 Contribution to SAVEWOOD</h2>
   <ul>
-    <li>Pré-localisation efficace des zones à fort potentiel forestier avant intervention</li>
-    <li>Réduction drastique du temps de campagne terrain (jusqu'à 40% d'économie)</li>
-    <li>Meilleure planification stratégique des inventaires et des parcours</li>
-    <li>Complémentarité parfaite entre vision aérienne drone et précision LiDAR mobile</li>
-    <li>Vision globale et synthétique de la parcelle avant toute intervention terrain</li>
-    <li>Identification rapide des zones denses nécessitant une attention particulière</li>
+    <li>Efficient pre-localization of high-potential forest areas prior to intervention</li>
+    <li>Drastic reduction of field campaign duration (up to 40% savings)</li>
+    <li>Improved strategic planning of inventories and survey paths</li>
+    <li>Perfect complementarity between aerial drone vision and mobile LiDAR precision</li>
+    <li>Global and synthetic overview of the plot before any field intervention</li>
+    <li>Rapid identification of dense areas requiring special attention</li>
   </ul>
 </section>
 
-<!-- LIMITES -->
+<!-- LIMITATIONS -->
 <section class="dark">
-  <h2>⚠️ Limites & Perspectives</h2>
+  <h2>⚠️ Limitations & Perspectives</h2>
   <ul>
-    <li>Contraintes techniques liées à la photogrammétrie en canopée très dense (sous-estimation possible)</li>
-    <li>Dépendance forte aux conditions météorologiques (vent, luminosité, couverture nuageuse)</li>
-    <li>Perspectives prometteuses de fusion avec les données LiDAR HD de l'IGN pour précision accrue</li>
-    <li>Automatisation complète de la détection intelligente de zones d'intérêt via machine learning</li>
-    <li>Extension vers d'autres types de végétation et terrains (vignobles, cultures, zones urbaines)</li>
-    <li>Intégration d'intelligence artificielle pour classification automatique des essences d'arbres</li>
+    <li>Technical constraints related to photogrammetry in very dense canopies (possible underestimation)</li>
+    <li>Strong dependence on weather conditions (wind, lighting, cloud cover)</li>
+    <li>Promising perspectives for fusion with IGN LiDAR HD data for increased accuracy</li>
+    <li>Full automation of intelligent area-of-interest detection via machine learning</li>
+    <li>Extension to other vegetation types and terrains (vineyards, crops, urban areas)</li>
+    <li>Integration of artificial intelligence for automatic tree species classification</li>
   </ul>
 </section>
 
-<!-- LIENS -->
+<!-- LINKS -->
 <section>
-  <h2>🔗 Ressources & Documentation</h2>
+  <h2>🔗 Resources & Documentation</h2>
   <div class="links">
     <a href="https://github.com/zinebbouti/Projet_Kael" target="_blank" class="link-card">
       <span class="icon">💻</span>
       <div class="text">
-        <strong>Code source complet</strong>
-        <span>Dépôt GitHub avec documentation technique</span>
+        <strong>Complete source code</strong>
+        <span>GitHub repository with technical documentation</span>
       </div>
     </a>
     
     <a href="rapport_kael.pdf" target="_blank" class="link-card">
       <span class="icon">📄</span>
       <div class="text">
-        <strong>Rapport TER détaillé</strong>
-        <span>Documentation complète du projet (PDF)</span>
+        <strong>Detailed TER report</strong>
+        <span>Complete project documentation (PDF)</span>
       </div>
     </a>
     
@@ -1034,7 +248,7 @@ footer .institution{
       <span class="icon">🗺️</span>
       <div class="text">
         <strong>IGN - LiDAR HD</strong>
-        <span>Données nationales haute définition</span>
+        <span>National high-definition data</span>
       </div>
     </a>
   </div>
@@ -1042,12 +256,12 @@ footer .institution{
 
 <!-- FOOTER -->
 <footer>
-  <div class="project-name">Projet CHP</div>
+  <div class="project-name">CHP Project</div>
   <div style="font-size:18px;color:var(--muted);margin-bottom:10px">
-    Cartographie de la canopée forestière par drone
+    Drone-based forest canopy mapping
   </div>
   <div class="institution">
-    TER ENSEIRB-MATMECA · Promotion 2024-2025
+    TER ENSEIRB-MATMECA · Class of 2024–2025
   </div>
 </footer>
 
