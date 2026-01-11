@@ -77,16 +77,17 @@ body{
   90%{opacity:0.3}
   100%{transform:translateY(-100vh) scale(1);opacity:0}
 }
-
 .logos{
+  width:100%;
+  max-width:1400px;
   display:flex;
-  justify-content:center;
+  justify-content:space-between;
   align-items:center;
-  gap:80px;
-  margin-bottom:60px;
+  margin-bottom:70px;
+  padding:0 60px;
   z-index:2;
-  flex-wrap:wrap;
 }
+
 
 .logos img{
   max-height:100px;
@@ -113,6 +114,18 @@ body{
 
 .logos img.logo-kael:hover{
   transform:scale(1.8) translateY(-8px);
+}
+.logo-left{
+  max-height:90px;
+}
+
+.logo-right{
+  max-height:120px;
+}
+
+.logos img:hover{
+  transform:translateY(-6px) scale(1.04);
+  box-shadow:0 30px 80px rgba(16,185,129,0.3);
 }
 
 .hero-content{
@@ -810,9 +823,10 @@ footer .institution{
   </div>
   
   <div class="logos">
-    <img src="logo_enseirb.jpg" alt="ENSEIRB-MATMECA">
-    <img src="logo_kael.png" alt="Projet CHP" class="logo-kael">
-  </div>
+  <img src="logo_enseirb.jpg" alt="ENSEIRB-MATMECA" class="logo-left">
+  <img src="logo_kael.png" alt="CHP Project" class="logo-right">
+</div>
+
 
   <div class="hero-content">
     <h1>Projet CHP</h1>
