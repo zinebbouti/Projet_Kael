@@ -2,7 +2,7 @@
 <html lang="fr">
 <head>
 <meta charset="utf-8">
-<title>Projet CHP – Cartographie de la canopée par drone</title>
+<title>Projet CHP – Drone-based canopy mapping</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&family=Inter:wght@300;400;600;700;900&display=swap');
@@ -816,19 +816,18 @@ footer .institution{
 
   <div class="hero-content">
     <h1>Projet CHP</h1>
-    <p class="subtitle">Cartographie innovante de la canopée forestière</p>
+    <p class="subtitle">Innovative forest canopy mapping</p>
     <p>
-      Développement d'une solution complète de <strong>cartographie aérienne par drone léger</strong>
-      pour optimiser les relevés terrain de l'application <strong>SAVEWOOD</strong> et révolutionner l'analyse forestière.
-    </p>
+      Development of a complete <strong>lightweight drone-based aerial mapping</strong> solution
+to optimize field surveys for the <strong>SAVEWOOD</strong> application and revolutionize forest analysis.
 
     <div class="badges">
       <span>🎓 TER ENSEIRB-MATMECA</span>
       <span>🚁 Drone &lt; 250g</span>
-      <span>📐 Photogrammétrie</span>
+      <span>📐 Photogrammetry</span>
       <span>☁️ WebODM</span>
       <span>📊 lidR / R</span>
-      <span>🐍 Python / PyQt</span>
+      <span>🐍 Python t</span>
     </div>
   </div>
 </div>
@@ -837,8 +836,8 @@ footer .institution{
 <div class="team-section">
   <div class="team-container">
     <div class="team-content">
-      <h2>L'équipe du projet</h2>
-      <p class="tagline">Trois étudiants passionnés par l'innovation technologique et l'environnement</p>
+      <h2>The project team</h2>
+      <p class="tagline"></p>
       
       <div class="team-members">
         <div class="member">
@@ -865,8 +864,7 @@ footer .institution{
       
       <div class="supervisors">
         <h3>🎯 Encadrement</h3>
-        <p><strong>Lionel Lacampagne</strong> · Responsable technique</p>
-        <p><strong>Gabriel Gouband</strong> · Expert forestier</p>
+        <p><strong>Lionel Lacampagne</strong> · </p>
       </div>
     </div>
     
@@ -889,144 +887,143 @@ footer .institution{
   <h2>🎯 Problématique & Contexte</h2>
   <div class="problem-box">
     <p>
-      <strong>SAVEWOOD</strong> révolutionne la qualification des arbres du sous-étage grâce au LiDAR mobile.
-      Cependant, l'identification préalable des <strong>zones d'intérêt stratégiques</strong> à l'échelle de la parcelle
-      reste un défi majeur depuis le sol.
+      <strong>SAVEWOOD</strong> is revolutionizing the classification of understory trees using mobile LiDAR.
+However, the prior identification of <strong>strategic areas of interest</strong> at the plot scale
+remains a major challenge from the ground.
+
     </p>
     <p>
-      Le <strong>projet CHP</strong> apporte une solution innovante en fournissant une <strong>vision aérienne synthétique et précise</strong> 
-      pour guider intelligemment les campagnes terrain et optimiser drastiquement le temps de mesure, tout en améliorant la qualité des données collectées.
+     The <strong>CHP project</strong> provides an innovative solution by delivering a <strong>synthetic and precise aerial overview</strong>
+to intelligently guide field campaigns and drastically optimize measurement time, while improving the quality of the collected data.
+
     </p>
   </div>
 </section>
 
-<!-- CHAÎNE DE TRAITEMENT -->
+<!-- PROCESSING PIPELINE -->
 <section class="dark">
-  <h2>🧭 Pipeline complet de traitement</h2>
+  <h2>🧭 Complete processing pipeline</h2>
   <div class="timeline">
     <div class="timeline-item">
       <span class="icon">📍</span>
-      <strong>Planification automatisée</strong> · Interface intuitive Python/PyQt avec cartographie interactive Leaflet pour définir les zones de vol
+      <strong>Automated planning</strong> · Intuitive Python/PyQt interface with interactive Leaflet mapping to define flight areas
     </div>
     <div class="timeline-item">
       <span class="icon">🚁</span>
-      <strong>Acquisition aérienne</strong> · Drone ultra-léger DJI Mini (&lt;250g) pour capturer des images haute résolution
+      <strong>Aerial acquisition</strong> · Ultra-light DJI Mini drone (&lt;250g) to capture high-resolution images
     </div>
     <div class="timeline-item">
       <span class="icon">🧩</span>
-      <strong>Reconstruction 3D</strong> · Pipeline photogrammétrique WebODM pour générer orthophotos et nuages de points denses
+      <strong>3D reconstruction</strong> · WebODM photogrammetric pipeline to generate orthophotos and dense point clouds
     </div>
     <div class="timeline-item">
       <span class="icon">🌲</span>
-      <strong>Analyse forestière avancée</strong> · Traitement intelligent du nuage de points avec R/lidR pour extraction d'indicateurs
+      <strong>Advanced forest analysis</strong> · Intelligent point cloud processing with R/lidR for indicator extraction
     </div>
     <div class="timeline-item">
       <span class="icon">🗺️</span>
-      <strong>Export & Intégration SIG</strong> · Transfert des données vers SAVEWOOD pour exploitation terrain optimisée
+      <strong>Export & GIS integration</strong> · Data transfer to SAVEWOOD for optimized field operations
     </div>
   </div>
 </section>
-
-<!-- MÉTHODOLOGIE -->
+<!-- METHODOLOGY -->
 <section>
-  <h2>🔬 Méthodologie détaillée</h2>
+  <h2>🔬 Detailed methodology</h2>
   <div class="grid">
     <div class="card">
-      <h3>Planification de mission</h3>
+      <h3>Mission planning</h3>
       <p>
-        Génération automatique et intelligente des waypoints à partir d'un polygone défini par l'utilisateur.
-        Calcul optimisé tenant compte de l'altitude de vol, du recouvrement frontal et latéral,
-        et des paramètres optiques du capteur pour garantir une couverture complète.
+        Automatic and intelligent generation of waypoints from a user-defined polygon.
+        Optimized computation taking into account flight altitude, frontal and lateral overlap,
+        and sensor optical parameters to ensure full coverage.
       </p>
-      <img src="paln_vol.png" alt="Planification de vol">
+      <img src="paln_vol.png" alt="Flight planning">
     </div>
 
     <div class="card">
-      <h3>Reconstruction 3D</h3>
+      <h3>3D reconstruction</h3>
       <p>
-        Traitement photogrammétrique avancé avec WebODM pour produire une orthophoto géoréférencée haute résolution
-        et un nuage de points dense 3D permettant une analyse précise de la canopée.
+        Advanced photogrammetric processing with WebODM to produce a high-resolution georeferenced orthophoto
+        and a dense 3D point cloud enabling accurate canopy analysis.
       </p>
-      <img src="reconstruction_3D.png" alt="Reconstruction 3D">
+      <img src="reconstruction_3D.png" alt="3D reconstruction">
     </div>
 
     <div class="card">
-      <h3>Analyse lidR</h3>
+      <h3>lidR analysis</h3>
       <p>
-        Extraction complète d'indicateurs forestiers : génération du DTM (Modèle Numérique de Terrain), 
-        CHM (Modèle de Hauteur de Canopée), détection automatique des arbres individuels et estimation 
-        précise des hauteurs avec algorithmes de segmentation avancés.
+        Comprehensive extraction of forest indicators: generation of the DTM (Digital Terrain Model),
+        CHM (Canopy Height Model), automatic detection of individual trees, and accurate
+        height estimation using advanced segmentation algorithms.
       </p>
     </div>
   </div>
 </section>
-
-<!-- RÉSULTATS -->
+<!-- RESULTS -->
 <section class="dark">
-  <h2>📊 Résultats & Performances</h2>
+  <h2>📊 Results & Performance</h2>
   <div class="stats">
     <div class="stat">
       <strong>8.5</strong>
-      <span>hectares analysés</span>
+      <span>hectares analyzed</span>
     </div>
     <div class="stat">
       <strong>150+</strong>
-      <span>arbres détectés</span>
+      <span>trees detected</span>
     </div>
     <div class="stat">
-      <strong>15-20</strong>
-      <span>mètres hauteur moy.</span>
+      <strong>15–20</strong>
+      <span>meters avg. height</span>
     </div>
     <div class="stat">
       <strong>&lt;250</strong>
-      <span>grammes (drone)</span>
+      <span>grams (drone)</span>
     </div>
   </div>
 </section>
 
-<!-- APPORT -->
+<!-- CONTRIBUTION -->
 <section>
-  <h2>🌲 Apport pour SAVEWOOD</h2>
+  <h2>🌲 Contribution to SAVEWOOD</h2>
   <ul>
-    <li>Pré-localisation efficace des zones à fort potentiel forestier avant intervention</li>
-    <li>Réduction drastique du temps de campagne terrain (jusqu'à 40% d'économie)</li>
-    <li>Meilleure planification stratégique des inventaires et des parcours</li>
-    <li>Complémentarité parfaite entre vision aérienne drone et précision LiDAR mobile</li>
-    <li>Vision globale et synthétique de la parcelle avant toute intervention terrain</li>
-    <li>Identification rapide des zones denses nécessitant une attention particulière</li>
+    <li>Efficient pre-localization of high forest potential areas prior to intervention</li>
+    <li>Drastic reduction of field campaign duration (up to 40% savings)</li>
+    <li>Improved strategic planning of inventories and survey routes</li>
+    <li>Perfect complementarity between drone-based aerial vision and mobile LiDAR precision</li>
+    <li>Global and synthetic overview of the plot before any field intervention</li>
+    <li>Rapid identification of dense areas requiring special attention</li>
   </ul>
 </section>
-
-<!-- LIMITES -->
+<!-- LIMITATIONS -->
 <section class="dark">
-  <h2>⚠️ Limites & Perspectives</h2>
+  <h2>⚠️ Limitations & Perspectives</h2>
   <ul>
-    <li>Contraintes techniques liées à la photogrammétrie en canopée très dense (sous-estimation possible)</li>
-    <li>Dépendance forte aux conditions météorologiques (vent, luminosité, couverture nuageuse)</li>
-    <li>Perspectives prometteuses de fusion avec les données LiDAR HD de l'IGN pour précision accrue</li>
-    <li>Automatisation complète de la détection intelligente de zones d'intérêt via machine learning</li>
-    <li>Extension vers d'autres types de végétation et terrains (vignobles, cultures, zones urbaines)</li>
-    <li>Intégration d'intelligence artificielle pour classification automatique des essences d'arbres</li>
+    <li>Technical constraints related to photogrammetry in very dense canopies (possible underestimation)</li>
+    <li>Strong dependence on weather conditions (wind, lighting, cloud cover)</li>
+    <li>Promising prospects for fusion with IGN LiDAR HD data for increased accuracy</li>
+    <li>Full automation of intelligent area-of-interest detection through machine learning</li>
+    <li>Extension to other vegetation types and terrains (vineyards, crops, urban areas)</li>
+    <li>Integration of artificial intelligence for automatic tree species classification</li>
   </ul>
 </section>
 
-<!-- LIENS -->
+<!-- LINKS -->
 <section>
-  <h2>🔗 Ressources & Documentation</h2>
+  <h2>🔗 Resources & Documentation</h2>
   <div class="links">
     <a href="https://github.com/zinebbouti/Projet_Kael" target="_blank" class="link-card">
       <span class="icon">💻</span>
       <div class="text">
-        <strong>Code source complet</strong>
-        <span>Dépôt GitHub avec documentation technique</span>
+        <strong>Complete source code</strong>
+        <span>GitHub repository with technical documentation</span>
       </div>
     </a>
     
     <a href="rapport_kael.pdf" target="_blank" class="link-card">
       <span class="icon">📄</span>
       <div class="text">
-        <strong>Rapport TER détaillé</strong>
-        <span>Documentation complète du projet (PDF)</span>
+        <strong>Detailed TER report</strong>
+        <span>Complete project documentation (PDF)</span>
       </div>
     </a>
     
@@ -1034,20 +1031,18 @@ footer .institution{
       <span class="icon">🗺️</span>
       <div class="text">
         <strong>IGN - LiDAR HD</strong>
-        <span>Données nationales haute définition</span>
+        <span>National high-definition data</span>
       </div>
     </a>
   </div>
-</section>
-
-<!-- FOOTER -->
+</section><!-- FOOTER -->
 <footer>
-  <div class="project-name">Projet CHP</div>
+  <div class="project-name">CHP Project</div>
   <div style="font-size:18px;color:var(--muted);margin-bottom:10px">
-    Cartographie de la canopée forestière par drone
+    Drone-based forest canopy mapping
   </div>
   <div class="institution">
-    TER ENSEIRB-MATMECA · Promotion 2024-2025
+    TER ENSEIRB-MATMECA · Class of 2024–2025
   </div>
 </footer>
 
