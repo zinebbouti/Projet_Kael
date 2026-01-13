@@ -1,6 +1,7 @@
 <!doctype html>
 <html lang="fr">
 <head>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 <meta charset="utf-8">
 <title>Projet CHP – Drone-based canopy mapping</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -972,6 +973,112 @@ to intelligently guide field campaigns and drastically optimize measurement time
       </p>
     </div>
   </div>
+<section class="dark">
+  <h2>📐 Mathematical foundations of terrain & canopy modelling</h2>
+
+  <p style="max-width:1000px;margin-bottom:40px">
+    From a mathematical perspective, forest mapping can be formulated as a
+    <strong>surface reconstruction problem</strong> from a discrete and noisy
+    3D point cloud obtained by photogrammetry.
+    The objective is to extract two continuous functions:
+    the terrain elevation and the canopy height.
+  </p>
+
+  <div class="grid">
+
+    <!-- DTM -->
+    <div class="card">
+      <h3>Digital Terrain Model (DTM)</h3>
+      <p>
+        The <strong>DTM</strong> represents the elevation of the bare ground.
+        It is obtained by first classifying ground points and then interpolating
+        a continuous surface over the spatial domain.
+      </p>
+
+      <p>
+        Given a set of ground points
+        \( \{(x_i, y_i, z_i)\}_{i=1}^n \),
+        the terrain elevation at an unsampled location \(x_0\) is estimated using
+        spatial interpolation.
+      </p>
+
+      <div class="math-box">
+        <strong>Ordinary kriging interpolation</strong>
+        $$
+        \hat{Z}(x_0) = \sum_{i=1}^{n} \lambda_i Z(x_i)
+        $$
+        with the unbiasedness constraint:
+        $$
+        \sum_{i=1}^{n} \lambda_i = 1
+        $$
+      </div>
+
+      <p>
+        The weights \( \lambda_i \) are computed by minimizing the estimation variance,
+        based on the spatial correlation structure of the data.
+      </p>
+    </div>
+
+    <!-- Variogram -->
+    <div class="card">
+      <h3>Spatial correlation modelling</h3>
+      <p>
+        The spatial dependency between elevation measurements is characterized
+        through a <strong>semi-variogram</strong>.
+      </p>
+
+      <div class="math-box">
+        $$
+        \gamma(h) = \frac{1}{2|N(h)|}
+        \sum_{(i,j)\in N(h)} [Z(x_i) - Z(x_j)]^2
+        $$
+      </div>
+
+      <p>
+        where \(N(h)\) is the set of point pairs separated by distance \(h\).
+        This function quantifies terrain smoothness and controls the interpolation behavior.
+      </p>
+    </div>
+
+    <!-- CHM -->
+    <div class="card">
+      <h3>Canopy Height Model (CHM)</h3>
+      <p>
+        The <strong>CHM</strong> represents vegetation height above ground and
+        is computed by subtracting the terrain model from the surface model.
+      </p>
+
+      <div class="math-box">
+        $$
+        \text{CHM}(x,y) = \text{DSM}(x,y) - \text{DTM}(x,y)
+        $$
+      </div>
+
+      <p>
+        where:
+      </p>
+      <ul>
+        <li><strong>DSM</strong>: maximum elevation per grid cell (canopy surface)</li>
+        <li><strong>DTM</strong>: interpolated ground elevation</li>
+      </ul>
+
+      <p>
+        This formulation isolates vegetation height and removes topographic effects,
+        allowing quantitative forest structure analysis.
+      </p>
+    </div>
+
+  </div>
+
+  <p style="max-width:1000px;margin-top:50px">
+    From an applied mathematics standpoint, this pipeline combines
+    <strong>optimization</strong>, <strong>spatial statistics</strong>,
+    and <strong>continuous surface modelling</strong>.
+    The resulting models form the basis for further mechanical,
+    ecological, and operational analyses.
+  </p>
+</section>
+
 </section>
 <!-- RESULTS -->
 <section class="dark">
