@@ -1310,6 +1310,100 @@ to intelligently guide field campaigns and drastically optimize measurement time
     <li>Rapid identification of dense areas requiring special attention</li>
   </ul>
 </section>
+  <!-- VALIDATION QUANTITATIVE -->
+<section>
+  <h2>🎯 Quantitative Validation Strategy</h2>
+  
+  <p style="max-width:1000px;margin-bottom:40px;font-size:19px">
+    To ensure the reliability of our aerial measurements, we have established a 
+    <strong style="color:var(--accent2)">rigorous validation protocol</strong> 
+    comparing drone-derived canopy heights against ground-truth measurements.
+  </p>
+
+  <div class="grid">
+    
+    <!-- Reference Data -->
+    <div class="card">
+      <h3>📏 Reference Data (Ground Truth)</h3>
+      <p>
+        Field measurements serve as the validation baseline for our photogrammetric estimates.
+      </p>
+      <ul style="margin-top:20px">
+        <li><strong style="color:var(--accent2)">Direct measurements:</strong> tree heights acquired on site using professional dendrometers</li>
+        <li><strong style="color:var(--accent2)">Georeferencing:</strong> precise GPS coordinates to match field trees with CHM detections</li>
+        <li><strong style="color:var(--accent2)">Sample size:</strong> representative distribution across the study area</li>
+      </ul>
+    </div>
+
+    <!-- Repeatability -->
+    <div class="card">
+      <h3>🔄 Repeatability & Averaging</h3>
+      <p>
+        Multiple flights under identical parameters enable statistical robustness assessment.
+      </p>
+      
+      <div class="math-box" style="background:rgba(16,185,129,0.08);padding:20px;border-radius:12px;margin:20px 0">
+        <p style="margin-bottom:10px"><strong>Mean height estimation:</strong></p>
+        $$
+        \overline{H^{\text{CHM}}_i}(\theta) = \frac{1}{K} \sum_{k=1}^{K} H^{\text{CHM}}_{i,k}(\theta)
+        $$
+        
+        <p style="margin:20px 0 10px 0"><strong>Standard deviation (uncertainty):</strong></p>
+        $$
+        \sigma_i(\theta) = \sqrt{\frac{1}{K-1} \sum_{k=1}^{K} 
+        \left( H^{\text{CHM}}_{i,k}(\theta) - \overline{H^{\text{CHM}}_i}(\theta) \right)^2 }
+        $$
+      </div>
+      
+      <p style="font-size:15px;color:var(--muted)">
+        where \(K\) is the number of repeated flights, \(\theta\) represents flight parameters 
+        (altitude, overlap, etc.), and \(i\) indexes individual trees.
+      </p>
+    </div>
+
+    <!-- Validation Error -->
+    <div class="card">
+      <h3>📊 Validation Error Metrics</h3>
+      <p>
+        Quantitative comparison between photogrammetric and field measurements.
+      </p>
+      
+      <div class="math-box" style="background:rgba(251,191,36,0.08);padding:20px;border-radius:12px;margin:20px 0">
+        <p style="margin-bottom:10px"><strong>Individual tree error:</strong></p>
+        $$
+        \varepsilon_i(\theta) = \overline{H^{\text{CHM}}_i}(\theta) - H^{\text{terrain}}_i
+        $$
+      </div>
+      
+      <p><strong style="color:var(--accent2)">Key indicators:</strong></p>
+      <ul style="margin-top:15px">
+        <li><strong style="color:var(--gold)">Bias:</strong> systematic over/underestimation</li>
+        <li><strong style="color:var(--gold)">RMSE:</strong> root mean square error across all samples</li>
+        <li><strong style="color:var(--gold)">Error distribution:</strong> statistical characterization of deviations</li>
+        <li><strong style="color:var(--gold)">Uncertainty \(\sigma_i\):</strong> measurement repeatability and confidence intervals</li>
+      </ul>
+    </div>
+
+  </div>
+
+  <!-- Visualization placeholder -->
+  <div class="card" style="max-width:900px;margin:50px auto 0">
+    <h3 style="margin-top:0">Validation Results Visualization</h3>
+    <div style="aspect-ratio:16/9;background:rgba(30,41,59,0.4);border-radius:12px;display:flex;align-items:center;justify-content:center;border:2px dashed rgba(16,185,129,0.3);margin-top:20px">
+      <p style="color:var(--muted);font-size:18px">📊 Insert validation plots: scatter plots, error distributions, RMSE by parameter set</p>
+    </div>
+    <p style="text-align:center;margin-top:15px;color:var(--accent2);font-weight:600">
+      Comparative analysis: CHM estimates vs. ground truth measurements
+    </p>
+  </div>
+
+  <p style="max-width:1000px;margin-top:50px;font-size:18px;line-height:1.9">
+    This validation framework enables <strong style="color:var(--accent2)">objective assessment</strong> 
+    of photogrammetric accuracy and provides quantitative guidance for 
+    <strong style="color:var(--gold)">optimal flight parameter selection</strong> 
+    in operational forest inventory applications.
+  </p>
+</section>
 <!-- LIMITATIONS -->
 <section class="dark">
   <h2>⚠️ Limitations & Perspectives</h2>
