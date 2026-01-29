@@ -1222,42 +1222,104 @@ to intelligently guide field campaigns and drastically optimize measurement time
     good texture quality and geometric accuracy suitable for environmental analysis and measurement applications.
   </p>
 </div>
-  
   <!-- VOL 2 -->
-  <h3 style="color:var(--accent2);font-size:32px;margin-top:40px;margin-bottom:30px">Vol 2 - Parc pexioto</h3>
+<h3 style="color:var(--accent2);font-size:32px;margin-top:40px;margin-bottom:30px">Flight 2 - Parc Pexioto (Espelette)</h3>
+
+<div class="grid" style="grid-template-columns: 1fr 1fr; gap: 40px; align-items: start;">
+  <!-- Carte -->
+  <div class="card">
+    <img src="carte_finale_norm.png" alt="Normalized canopy height map - Flight 2" style="margin-top:0;width:100%;border-radius:8px">
+    <p style="text-align:center;margin-top:15px;color:var(--accent2);font-weight:600">
+      Forest inventory - Normalized view
+    </p>
+  </div>
   
-  <div class="grid" style="grid-template-columns: 1fr 1fr; gap: 40px; align-items: start;">
-    <!-- Carte -->
+  <!-- Statistiques -->
+  <div>
+    <div class="card" style="margin-bottom:20px">
+      <h3 style="margin-top:0">Digital Terrain Model (DTM)</h3>
+      <ul style="margin-top:20px">
+        <li>Resolution: <strong style="color:var(--accent2)">1 m</strong></li>
+        <li>Min / Mean / Max: <strong style="color:var(--accent2)">-63.18 / -60.84 / -56.97 m</strong></li>
+        <li>Missing cells: <strong style="color:var(--accent2)">14.23% NA</strong></li>
+      </ul>
+    </div>
+    
     <div class="card">
-      <img src="carte_finale_norm.png" alt="Carte normalisée Vol 1" style="margin-top:0">
-      <p style="text-align:center;margin-top:15px;color:var(--accent2);font-weight:600">
-        Inventaire forestier - Vue normalisée
+      <h3 style="margin-top:0">Canopy Height Model (CHM)</h3>
+      <ul style="margin-top:20px">
+        <li>Resolution: <strong style="color:var(--accent2)">0.5 m</strong></li>
+        <li>Max height (raw): <strong style="color:var(--accent2)">23.46 m</strong></li>
+        <li>Mean height: <strong style="color:var(--accent2)">3.31 m</strong></li>
+        <li>Missing cells: <strong style="color:var(--accent2)">33.25% NA</strong> (27.55% after smoothing)</li>
+        <li><strong style="color:var(--gold)">Trees detected (LMF): 246</strong></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- Explication des valeurs négatives -->
+<div class="card" style="max-width:1100px;margin:40px auto 0">
+  <h3 style="margin-top:0">📍 Understanding DTM Elevation Values</h3>
+  
+  <p style="margin-bottom:25px;line-height:1.8">
+    The negative altitude values in the DTM require explanation, as they result from the 
+    <strong style="color:var(--accent2)">coordinate reference system</strong> used in the reconstruction.
+  </p>
+  
+  <div class="grid" style="grid-template-columns:1fr 1fr;gap:30px;margin-top:30px">
+    <div>
+      <h4 style="color:var(--accent2);font-size:20px;margin-bottom:15px">Coordinate System</h4>
+      <ul style="margin-top:15px">
+        <li><strong style="color:var(--accent2)">EPSG:32630</strong> - WGS 84 / UTM zone 30N</li>
+        <li>Projected coordinate system for the region (6°W to 0°)</li>
+        <li>Altitude measured relative to the <strong style="color:var(--gold)">WGS 84 ellipsoid</strong>, not sea level</li>
+      </ul>
+    </div>
+    
+    <div>
+      <h4 style="color:var(--accent2);font-size:20px;margin-bottom:15px">Ellipsoid vs. Sea Level</h4>
+      <ul style="margin-top:15px">
+        <li>WGS 84 ellipsoid and geoid (sea level) offset: <strong style="color:var(--accent2)">~52-54 m</strong> in this region</li>
+        <li>Actual terrain elevation above sea level: <strong style="color:var(--gold)">~5-10 m</strong></li>
+        <li>Ellipsoid-referenced altitude: <strong style="color:var(--accent2)">-63 to -57 m</strong></li>
+      </ul>
+    </div>
+  </div>
+  
+  <div style="background:rgba(16,185,129,0.08);padding:25px;border-radius:12px;margin-top:30px;border:1px solid rgba(16,185,129,0.2)">
+    <h4 style="color:var(--accent2);font-size:18px;margin-bottom:15px">Conversion Formula</h4>
+    <p style="margin-bottom:10px">To obtain the actual altitude above sea level (NGF - French leveling system):</p>
+    
+    <div class="math-box" style="background:rgba(30,41,59,0.6);padding:20px;border-radius:8px;margin:15px 0">
+      $$
+      h_{\text{sea level}} = h_{\text{ellipsoid}} + N_{\text{geoid}}
+      $$
+      <p style="margin-top:15px;font-size:15px;color:var(--muted)">
+        where \(N_{\text{geoid}} \approx +52\) to \(+54\) m for the Basque Country region
       </p>
     </div>
     
-    <!-- Statistiques -->
-    <div>
-      <div class="card" style="margin-bottom:20px">
-        <h3 style="margin-top:0">Digital Terrain Model (DTM)</h3>
-        <ul style="margin-top:20px">
-          <li>Résolution : <strong style="color:var(--accent2)">1 m</strong></li>
-          <li>Min / Moyenne / Max : <strong style="color:var(--accent2)">-63.18 / -60.84 / -56.97 m</strong></li>
-          <li>Cellules manquantes : <strong style="color:var(--accent2)">14.23% NA</strong></li>
-        </ul>
-      </div>
-      
-      <div class="card">
-        <h3 style="margin-top:0">Canopy Height Model (CHM)</h3>
-        <ul style="margin-top:20px">
-          <li>Résolution : <strong style="color:var(--accent2)">0.5 m</strong></li>
-          <li>Hauteur max (brut) : <strong style="color:var(--accent2)">23.46 m</strong></li>
-          <li>Hauteur moyenne : <strong style="color:var(--accent2)">3.31 m</strong></li>
-          <li>Cellules manquantes : <strong style="color:var(--accent2)">33.25% NA</strong> (27.55% après lissage)</li>
-          <li><strong style="color:var(--gold)">Arbres détectés (LMF) : 246</strong></li>
-        </ul>
-      </div>
-    </div>
+    <p style="margin-top:20px">
+      <strong style="color:var(--gold)">Example:</strong> 
+      DTM value of -60.84 m (ellipsoid) + 53 m (geoid correction) ≈ <strong style="color:var(--accent2)">-7.84 m to -6.84 m above sea level</strong>
+    </p>
+    
+    <p style="margin-top:15px;color:var(--muted);font-size:15px">
+      This is consistent with the local topography of Espelette, which lies in a low-altitude area near the Atlantic coast with gentle hills.
+    </p>
   </div>
+  
+  <div style="background:rgba(251,191,36,0.08);padding:20px;border-radius:12px;margin-top:25px;border:1px solid rgba(251,191,36,0.2)">
+    <p style="margin:0;font-size:16px">
+      <strong style="color:var(--gold)">⚠️ Important note:</strong> 
+      For the CHM calculation, the absolute altitude values are not critical. 
+      What matters is the <strong style="color:var(--accent2)">relative height difference</strong> between 
+      the terrain surface (DTM) and the canopy surface (DSM), which correctly represents vegetation height 
+      regardless of the reference system used.
+    </p>
+  </div>
+</div>
   
   <!-- VOL 3 -->
   <h3 style="color:var(--accent2);font-size:32px;margin-top:80px;margin-bottom:30px">Vol 3 - Jardin Public</h3>
