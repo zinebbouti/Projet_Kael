@@ -1455,34 +1455,80 @@ to intelligently guide field campaigns and drastically optimize measurement time
   </div>
 
 </section>
-</section>
-<!-- LIMITATIONS -->
+<!-- LIMITATIONS & PERSPECTIVES -->
 <section class="dark">
   <h2>⚠️ Limitations & Perspectives</h2>
-  <ul>
-    <li>Technical constraints related to photogrammetry in very dense canopies (possible underestimation)</li>
-    <li>Strong dependence on weather conditions (wind, lighting, cloud cover)</li>
-    <li>Promising prospects for fusion with IGN LiDAR HD data for increased accuracy</li>
-    <li>Full automation of intelligent area-of-interest detection through machine learning</li>
-    <li>Extension to other vegetation types and terrains (vineyards, crops, urban areas)</li>
-    <li>Integration of artificial intelligence for automatic tree species classification</li>
-  </ul>
- 
-  <h3 style="color:var(--accent2);font-size:32px;margin-top:80px;margin-bottom:30px">Vol 3 - Jardin Public</h3>
   
-  <div class="grid" style="grid-template-columns: 1fr 1fr; gap: 40px; align-items: start;">
-    <!-- Carte -->
+  <!-- Operational and Technical Limitations -->
+  <div class="card" style="background: linear-gradient(135deg, rgba(239,68,68,0.1), rgba(185,28,28,0.1)); border-left: 4px solid var(--warning); margin-bottom: 40px;">
+    <h3 style="color: var(--warning); margin-bottom: 20px;">Operational and Technical Limitations</h3>
+    <ul style="margin-bottom: 0;">
+      <li>Limited compatibility of mission planning software with newer drone versions</li>
+      <li>Maximum number of waypoints imposed by the drone controller</li>
+      <li>Strong dependence on weather conditions (wind, lighting, cloud cover)</li>
+      <li>Geographic constraints (complex terrain, dense vegetation)</li>
+      <li>Long processing time for highly precise reconstructions</li>
+      <li>Technical constraints related to photogrammetry in very dense canopies (possible underestimation)</li>
+    </ul>
+  </div>
+
+  <!-- Implications -->
+  <div class="card" style="background: linear-gradient(135deg, rgba(59,130,246,0.1), rgba(37,99,235,0.1)); border-left: 4px solid var(--accent); margin-bottom: 60px;">
+    <h3 style="color: var(--accent); margin-bottom: 20px;">Implications</h3>
+    <ul style="margin-bottom: 0;">
+      <li>Trade-off between reconstruction accuracy and operational feasibility</li>
+      <li>Some complex missions become impractical in a realistic time frame</li>
+    </ul>
+  </div>
+
+  <!-- Limit Case: Complex Mission and Reconstruction Failure -->
+  <h3 style="color: var(--accent2); font-size: 32px; margin-bottom: 40px; text-align: center;">
+    Limit Case: Complex Mission and Reconstruction Failure
+  </h3>
+  
+  <div class="grid" style="grid-template-columns: 1.2fr 1fr; gap: 40px; margin-bottom: 60px; align-items: start;">
+    <!-- Left: Image -->
     <div class="card">
-      <div style="aspect-ratio:4/3;background:rgba(30,41,59,0.4);border-radius:12px;display:flex;align-items:center;justify-content:center;border:2px dashed rgba(16,185,129,0.3)">
-        <p style="color:var(--muted);font-size:18px">📍 Insérer carte Vol 2</p>
-      </div>
-      <p style="text-align:center;margin-top:15px;color:var(--accent2);font-weight:600">
-        Inventaire forestier - Vue normalisée
+      <img src="WEBODM.png" alt="Complex flight trajectory over a large and irregular area" style="width: 100%; border-radius: 12px; margin-bottom: 15px;">
+      <p style="text-align: center; color: var(--muted); font-size: 14px; font-style: italic;">
+        Complex flight trajectory over a large and irregular area
       </p>
     </div>
     
-</section>
+    <!-- Right: Explanations -->
+    <div>
+      <div class="card" style="background: linear-gradient(135deg, rgba(239,68,68,0.08), rgba(185,28,28,0.08)); margin-bottom: 25px;">
+        <h4 style="color: var(--warning); margin-bottom: 15px;">📊 Observed Issues</h4>
+        <ul style="margin-bottom: 0;">
+          <li>Very large number of waypoints</li>
+          <li>Long flight duration and data volume</li>
+          <li>Extremely long processing time</li>
+          <li>Reconstruction failure in WebODM</li>
+        </ul>
+      </div>
+      
+      <div class="card" style="background: linear-gradient(135deg, rgba(59,130,246,0.08), rgba(37,99,235,0.08));">
+        <h4 style="color: var(--accent); margin-bottom: 15px;">💡 Interpretation</h4>
+        <ul style="margin-bottom: 0;">
+          <li>Mission exceeds practical software limits</li>
+          <li>Precision-oriented settings are not always optimal</li>
+          <li>Highlights the need for mission simplification</li>
+        </ul>
+      </div>
+    </div>
+  </div>
 
+  <!-- Future Perspectives -->
+  <div class="card" style="background: linear-gradient(135deg, rgba(16,185,129,0.1), rgba(5,150,105,0.1)); border-left: 4px solid var(--accent2);">
+    <h3 style="color: var(--accent2); margin-bottom: 20px;">🚀 Future Perspectives</h3>
+    <ul style="margin-bottom: 0;">
+      <li>Promising prospects for fusion with IGN LiDAR HD data for increased accuracy</li>
+      <li>Full automation of intelligent area-of-interest detection through machine learning</li>
+      <li>Extension to other vegetation types and terrains (vineyards, crops, urban areas)</li>
+      <li>Integration of artificial intelligence for automatic tree species classification</li>
+    </ul>
+  </div>
+</section>
 <!-- LINKS -->
 <section>
   <h2>🔗 Resources & Documentation</h2>
